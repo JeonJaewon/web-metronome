@@ -44,6 +44,9 @@
 .bpm-controller {
   display: flex;
 }
+.bpm-controller button {
+  border: 1px solid #ddd;
+}
 
 .metronome-controller {
   display: flex;
@@ -54,6 +57,8 @@
 
 .metronome-controller button {
   flex: 1;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .volume-controller {
@@ -72,6 +77,8 @@ footer {
   width: 100%;
   padding: 10px 0;
   background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 footer a {
@@ -82,4 +89,14 @@ footer a {
 
 footer a:hover {
   color: #000;
+}
+
+.bpm-controller,
+.volume-controller,
+.beat-indicator {
+  border: 1px solid #ddd;
+  padding: 32px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }

@@ -63,8 +63,10 @@ function App() {
           Play
         </button>
       </div>
-      <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
-      <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
+      <div className="beat-indicator">
+        <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
+        <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
+      </div>
       <footer>
         <a
           href="https://jeonjaewon.github.io/"
