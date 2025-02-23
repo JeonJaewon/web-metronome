@@ -48,6 +48,15 @@ function App() {
       </div>
       <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
       <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
+      <footer>
+        <a
+          href="https://jeonjaewon.github.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit my blog
+        </a>
+      </footer>
     </>
   );
 }
