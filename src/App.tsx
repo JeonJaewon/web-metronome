@@ -2,11 +2,13 @@ import { useRef, useState, useEffect } from "react";
 import "./App.css";
 import Ticker from "./Ticker";
 import Slider from "./Slider";
+import Buttons from "./Buttons";
 
 function App() {
   const [bpm, setBPM] = useState(180);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tick, setTick] = useState(0);
+  const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
   const audioContextRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<number | null>(null);
   const nextNoteTimeRef = useRef<number>(0);
@@ -20,7 +22,7 @@ function App() {
     osc.connect(audioContextRef.current!.destination);
     osc.start(time);
     osc.stop(time + 0.1);
-    setTick((prev) => (prev + 1) % 4); // Update tick for visual tracking
+    setTick((prev) => (prev + 1) % beatsPerMeasure); // Update tick for visual tracking
   };
 
   const scheduler = () => {
@@ -70,7 +72,8 @@ function App() {
       <Slider bpm={bpm} setBPM={setBPM} />
       <button onClick={startMetronome}>Play</button>
       <button onClick={stopMetronome}>Stop</button>
-      <Ticker tick={tick} />
+      <Ticker tick={tick} beatsPerMeasure={beatsPerMeasure} />
+      <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
     </>
   );
 }

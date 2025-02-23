@@ -3,12 +3,13 @@ import "./Ticker.css";
 
 interface TickerProps {
   tick: number;
+  beatsPerMeasure: number;
 }
 
-const Ticker: React.FC<TickerProps> = ({ tick }) => {
+const Ticker: React.FC<TickerProps> = ({ tick, beatsPerMeasure }) => {
   return (
     <div className="ticker">
-      {[0, 1, 2, 3].map((i) => (
+      {Array.from({ length: beatsPerMeasure }, (_, i) => (
         <div key={i} className={`tick ${i === tick ? "active" : ""}`}></div>
       ))}
     </div>
