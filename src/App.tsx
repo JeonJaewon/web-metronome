@@ -3,6 +3,7 @@ import "./App.css";
 import Ticker from "./Ticker";
 import Slider from "./Slider";
 import Buttons from "./Buttons";
+import { startMetronome, stopMetronome, scheduler } from "./metronome";
 
 function App() {
   const [bpm, setBPM] = useState(180);
@@ -13,50 +14,21 @@ function App() {
   const intervalRef = useRef<number | null>(null);
   const nextNoteTimeRef = useRef<number>(0);
 
-  const calculateIntervalByBPM = (bpm: number) => {
-    return 60 / bpm;
-  };
-
-  const scheduleNote = (time: number) => {
-    const osc = audioContextRef.current!.createOscillator();
-    osc.connect(audioContextRef.current!.destination);
-    osc.start(time);
-    osc.stop(time + 0.1);
-    setTick((prev) => (prev + 1) % beatsPerMeasure); // Update tick for visual tracking
-  };
-
-  const scheduler = () => {
-    while (
-      nextNoteTimeRef.current <
-      audioContextRef.current!.currentTime + 0.1
-    ) {
-      scheduleNote(nextNoteTimeRef.current);
-      nextNoteTimeRef.current += calculateIntervalByBPM(bpm);
-    }
-    intervalRef.current = window.setTimeout(scheduler, 25);
-  };
-
-  const startMetronome = () => {
-    if (!isPlaying) {
-      audioContextRef.current = new (window.AudioContext ||
-        (window as any).webkitAudioContext)();
-      nextNoteTimeRef.current = audioContextRef.current.currentTime;
-      scheduler();
-      setIsPlaying(true);
-    }
-  };
-
-  const stopMetronome = () => {
+  useEffect(() => {
     if (isPlaying) {
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
       }
-      audioContextRef.current?.close();
-      audioContextRef.current = null;
-      setIsPlaying(false);
-      setTick(0); // Reset tick when stopping
+      nextNoteTimeRef.current = audioContextRef.current!.currentTime;
+      scheduler(
+        bpm,
+        nextNoteTimeRef,
+        audioContextRef,
+        setTick,
+        beatsPerMeasure
+      );
     }
-  };
+  }, [bpm]);
 
   useEffect(() => {
     return () => {
@@ -70,8 +42,35 @@ function App() {
   return (
     <>
       <Slider bpm={bpm} setBPM={setBPM} />
-      <button onClick={startMetronome}>Play</button>
-      <button onClick={stopMetronome}>Stop</button>
+      <button
+        onClick={() =>
+          startMetronome(
+            isPlaying,
+            setIsPlaying,
+            audioContextRef,
+            nextNoteTimeRef,
+            scheduler,
+            bpm,
+            setTick,
+            beatsPerMeasure
+          )
+        }
+      >
+        Play
+      </button>
+      <button
+        onClick={() =>
+          stopMetronome(
+            isPlaying,
+            setIsPlaying,
+            intervalRef,
+            audioContextRef,
+            setTick
+          )
+        }
+      >
+        Stop
+      </button>
       <Ticker tick={tick} beatsPerMeasure={beatsPerMeasure} />
       <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
     </>
