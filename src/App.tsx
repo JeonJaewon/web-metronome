@@ -6,7 +6,7 @@ import Buttons from "./Buttons";
 import { MetronomeScheduler } from "./metronome";
 
 function App() {
-  const [bpm, setBPM] = useState(180);
+  const [bpm, setBPM] = useState(100);
   const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
 
