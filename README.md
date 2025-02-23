@@ -1,6 +1,6 @@
 # Simple Web Metronome
 
-This project is a simple web-based metronome built using React, TypeScript, and Vite.
+This project is a simple web-based metronome built using Web Audio API, React, TypeScript, and Vite.
 
 ## Project URL
 
