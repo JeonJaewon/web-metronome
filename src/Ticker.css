@@ -1,0 +1,17 @@
+.ticker {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.tick {
+  width: 20px;
+  height: 20px;
+  background-color: gray;
+  border-radius: 50%;
+  transition: background-color 0.1s;
+}
+
+.tick.active {
+  background-color: red;
+}
