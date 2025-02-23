@@ -1,77 +1,46 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import "./App.css";
 import Ticker from "./Ticker";
 import Slider from "./Slider";
 import Buttons from "./Buttons";
-import { startMetronome, stopMetronome, scheduler } from "./metronome";
+import { MetronomeScheduler } from "./metronome";
 
 function App() {
   const [bpm, setBPM] = useState(180);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [tick, setTick] = useState(0);
+  const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const intervalRef = useRef<number | null>(null);
-  const nextNoteTimeRef = useRef<number>(0);
+
+  const onTick = useCallback(() => {
+    setBeatIndicatorIndex((prev) => (prev + 1) % beatsPerMeasure); // Update tick for visual tracking
+  }, [beatsPerMeasure]);
+
+  const schedulerRef = useRef<MetronomeScheduler>(
+    new MetronomeScheduler(bpm, onTick)
+  );
 
   useEffect(() => {
-    if (isPlaying) {
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
-      nextNoteTimeRef.current = audioContextRef.current!.currentTime;
-      scheduler(
-        bpm,
-        nextNoteTimeRef,
-        audioContextRef,
-        setTick,
-        beatsPerMeasure
-      );
-    }
+    schedulerRef.current.setBPM(bpm);
   }, [bpm]);
 
   useEffect(() => {
-    return () => {
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
-      audioContextRef.current?.close();
-    };
-  }, []);
+    schedulerRef.current.setOnTick(onTick);
+  }, [onTick]);
 
   return (
     <>
       <Slider bpm={bpm} setBPM={setBPM} />
-      <button
-        onClick={() =>
-          startMetronome(
-            isPlaying,
-            setIsPlaying,
-            audioContextRef,
-            nextNoteTimeRef,
-            scheduler,
-            bpm,
-            setTick,
-            beatsPerMeasure
-          )
-        }
-      >
+      <button onClick={() => schedulerRef.current?.startMetronome()}>
         Play
       </button>
       <button
-        onClick={() =>
-          stopMetronome(
-            isPlaying,
-            setIsPlaying,
-            intervalRef,
-            audioContextRef,
-            setTick
-          )
-        }
+        onClick={() => {
+          schedulerRef.current?.stopMetronome();
+          setBeatIndicatorIndex(0);
+        }}
       >
         Stop
       </button>
-      <Ticker tick={tick} beatsPerMeasure={beatsPerMeasure} />
+      <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
       <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
     </>
   );

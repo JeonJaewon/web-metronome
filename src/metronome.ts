@@ -2,87 +2,59 @@ const calculateIntervalByBPM = (bpm: number) => {
   return 60 / bpm;
 };
 
-export const scheduleNote = (
-  time: number,
-  audioContextRef: React.MutableRefObject<AudioContext | null>,
-  setTick: React.Dispatch<React.SetStateAction<number>>,
-  beatsPerMeasure: number
-) => {
-  const osc = audioContextRef.current!.createOscillator();
-  osc.connect(audioContextRef.current!.destination);
-  osc.start(time);
-  osc.stop(time + 0.1);
-  setTick((prev) => (prev + 1) % beatsPerMeasure); // Update tick for visual tracking
-};
+export class MetronomeScheduler {
+  public isPlaying: boolean = false;
+  private audioContext: AudioContext = new (window.AudioContext ||
+    (window as any).webkitAudioContext)();
+  private nextNoteTime: number = this.audioContext.currentTime;
+  private timer: ReturnType<typeof setTimeout> | null = null;
 
-export const scheduler = (
-  bpm: number,
-  nextNoteTimeRef: React.MutableRefObject<number>,
-  audioContextRef: React.MutableRefObject<AudioContext | null>,
-  setTick: React.Dispatch<React.SetStateAction<number>>,
-  beatsPerMeasure: number
-) => {
-  while (nextNoteTimeRef.current < audioContextRef.current!.currentTime + 0.1) {
-    scheduleNote(
-      nextNoteTimeRef.current,
-      audioContextRef,
-      setTick,
-      beatsPerMeasure
-    );
-    nextNoteTimeRef.current += calculateIntervalByBPM(bpm);
+  constructor(
+    private bpm: number,
+    private onTick: (param?: unknown[]) => void
+  ) {}
+
+  tick() {
+    const osc = this.audioContext.createOscillator();
+    osc.connect(this.audioContext.destination);
+    osc.start(this.nextNoteTime);
+    osc.stop(this.nextNoteTime + 0.1);
+    this.onTick();
   }
-  window.setTimeout(
-    () =>
-      scheduler(
-        bpm,
-        nextNoteTimeRef,
-        audioContextRef,
-        setTick,
-        beatsPerMeasure
-      ),
-    25
-  );
-};
 
-export const startMetronome = (
-  isPlaying: boolean,
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>,
-  audioContextRef: React.MutableRefObject<AudioContext | null>,
-  nextNoteTimeRef: React.MutableRefObject<number>,
-  scheduler: (
-    bpm: number,
-    nextNoteTimeRef: React.MutableRefObject<number>,
-    audioContextRef: React.MutableRefObject<AudioContext | null>,
-    setTick: React.Dispatch<React.SetStateAction<number>>,
-    beatsPerMeasure: number
-  ) => void,
-  bpm: number,
-  setTick: React.Dispatch<React.SetStateAction<number>>,
-  beatsPerMeasure: number
-) => {
-  if (!isPlaying) {
-    audioContextRef.current = new (window.AudioContext ||
-      (window as any).webkitAudioContext)();
-    nextNoteTimeRef.current = audioContextRef.current.currentTime;
-    scheduler(bpm, nextNoteTimeRef, audioContextRef, setTick, beatsPerMeasure);
-    setIsPlaying(true);
-  }
-};
+  scheduleNextNote() {
+    if (!this.isPlaying) return;
 
-export const stopMetronome = (
-  isPlaying: boolean,
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>,
-  intervalRef: React.MutableRefObject<number | null>,
-  audioContextRef: React.MutableRefObject<AudioContext | null>,
-  setTick: React.Dispatch<React.SetStateAction<number>>
-) => {
-  if (isPlaying) {
-    if (intervalRef.current) {
-      clearTimeout(intervalRef.current);
+    while (this.nextNoteTime < this.audioContext.currentTime + 0.1) {
+      this.tick();
+      this.nextNoteTime += calculateIntervalByBPM(this.bpm);
     }
-    audioContextRef.current?.close();
-    audioContextRef.current = null;
-    setIsPlaying(false);
-    setTick(0); // Reset tick when stopping
+    this.timer = setTimeout(() => this.scheduleNextNote(), 25);
   }
-};
+
+  startMetronome() {
+    if (!this.isPlaying) {
+      this.isPlaying = true;
+      this.scheduleNextNote();
+    }
+  }
+
+  stopMetronome() {
+    if (this.timer !== null) {
+      this.timer = null;
+    }
+    this.isPlaying = false;
+  }
+
+  setBPM(bpm: number) {
+    this.bpm = bpm;
+    if (this.isPlaying) {
+      this.stopMetronome();
+      this.startMetronome();
+    }
+  }
+
+  setOnTick(onTick: (param?: unknown[]) => void) {
+    this.onTick = onTick;
+  }
+}
