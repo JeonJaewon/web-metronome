@@ -11,6 +11,7 @@ export class MetronomeScheduler {
   private audioContext: AudioContext = createAudioContext();
   private nextNoteTime: number = this.audioContext.currentTime;
   private timer: ReturnType<typeof setTimeout> | null = null;
+  private volume: number = 0.5;
 
   constructor(
     private bpm: number,
@@ -19,8 +20,11 @@ export class MetronomeScheduler {
 
   tick() {
     const osc = this.audioContext.createOscillator();
+    const gainNode = this.audioContext.createGain();
+    gainNode.gain.value = this.volume;
     osc.frequency.value = 500;
-    osc.connect(this.audioContext.destination);
+    osc.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
     osc.start(this.nextNoteTime);
     osc.stop(this.nextNoteTime + 0.1);
     this.onTick();
@@ -60,5 +64,9 @@ export class MetronomeScheduler {
 
   setOnTick(onTick: (param?: unknown[]) => void) {
     this.onTick = onTick;
+  }
+
+  setVolume(volume: number) {
+    this.volume = volume;
   }
 }
