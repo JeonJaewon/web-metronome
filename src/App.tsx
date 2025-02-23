@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import "./App.css";
 import Ticker from "./Ticker";
+import Slider from "./Slider";
 
 function App() {
   const [bpm, setBPM] = useState(180);
@@ -66,11 +67,7 @@ function App() {
 
   return (
     <>
-      <input
-        type="number"
-        value={bpm}
-        onChange={(e) => setBPM(Number(e.target.value))}
-      />
+      <Slider bpm={bpm} setBPM={setBPM} />
       <button onClick={startMetronome}>Play</button>
       <button onClick={stopMetronome}>Stop</button>
       <Ticker tick={tick} />
