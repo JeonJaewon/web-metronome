@@ -2,10 +2,13 @@ const calculateIntervalByBPM = (bpm: number) => {
   return 60 / bpm;
 };
 
+const createAudioContext = () => {
+  return new (window.AudioContext || (window as any).webkitAudioContext)();
+};
+
 export class MetronomeScheduler {
   public isPlaying: boolean = false;
-  private audioContext: AudioContext = new (window.AudioContext ||
-    (window as any).webkitAudioContext)();
+  private audioContext: AudioContext = createAudioContext();
   private nextNoteTime: number = this.audioContext.currentTime;
   private timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -16,6 +19,7 @@ export class MetronomeScheduler {
 
   tick() {
     const osc = this.audioContext.createOscillator();
+    osc.frequency.value = 500;
     osc.connect(this.audioContext.destination);
     osc.start(this.nextNoteTime);
     osc.stop(this.nextNoteTime + 0.1);
