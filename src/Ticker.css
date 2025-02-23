@@ -1,7 +1,7 @@
 .ticker {
   display: flex;
   justify-content: space-around;
-  margin-top: 20px;
+  margin-top: 60px;
 }
 
 .tick {
@@ -13,5 +13,5 @@
 }
 
 .tick.active {
-  background-color: red;
+  background-color: blue;
 }

@@ -1,8 +1,8 @@
 .slider-container {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .slider {
@@ -13,3 +13,4 @@
   margin-top: 10px;
   font-size: 1.2em;
 }
+

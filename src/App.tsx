@@ -28,18 +28,24 @@ function App() {
 
   return (
     <>
-      <Slider bpm={bpm} setBPM={setBPM} />
-      <button onClick={() => schedulerRef.current?.startMetronome()}>
-        Play
-      </button>
-      <button
-        onClick={() => {
-          schedulerRef.current?.stopMetronome();
-          setBeatIndicatorIndex(0);
-        }}
-      >
-        Stop
-      </button>
+      <div className="bpm-controller">
+        <button onClick={() => setBPM((bpm) => bpm - 1)}>-</button>
+        <Slider bpm={bpm} setBPM={setBPM} />
+        <button onClick={() => setBPM((bpm) => bpm + 1)}>+</button>
+      </div>
+      <div className="metronome-controller">
+        <button
+          onClick={() => {
+            schedulerRef.current?.stopMetronome();
+            setBeatIndicatorIndex(0);
+          }}
+        >
+          Stop
+        </button>
+        <button onClick={() => schedulerRef.current?.startMetronome()}>
+          Play
+        </button>
+      </div>
       <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
       <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
     </>

@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+
+.bpm-controller {
+  display: flex;
+}
+
+.metronome-controller {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 40px 0;
+}
