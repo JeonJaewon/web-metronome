@@ -9,6 +9,7 @@ interface SliderProps {
 const Slider: React.FC<SliderProps> = ({ bpm, setBPM }) => {
   return (
     <div className="slider-container">
+      <div className="bpm-display">{bpm} BPM</div>
       <input
         type="range"
         min="40"
@@ -17,7 +18,6 @@ const Slider: React.FC<SliderProps> = ({ bpm, setBPM }) => {
         onChange={(e) => setBPM(Number(e.target.value))}
         className="slider"
       />
-      <div className="bpm-display">{bpm} BPM</div>
     </div>
   );
 };
