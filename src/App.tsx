@@ -3,6 +3,7 @@ import "./App.css";
 import Ticker from "./Ticker";
 import Slider from "./Slider";
 import Buttons from "./Buttons";
+import Stopwatch from "./components/Stopwatch";
 import { MetronomeScheduler } from "./metronome";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
   const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
   const [volume, setVolume] = useState(0.5);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const onTick = useCallback(() => {
     setBeatIndicatorIndex((prev) => (prev + 1) % beatsPerMeasure); // Update tick for visual tracking
@@ -55,14 +57,21 @@ function App() {
           onClick={() => {
             schedulerRef.current?.stopMetronome();
             setBeatIndicatorIndex(0);
+            setIsPlaying(false);
           }}
         >
           Stop
         </button>
-        <button onClick={() => schedulerRef.current?.startMetronome()}>
+        <button
+          onClick={() => {
+            schedulerRef.current?.startMetronome();
+            setIsPlaying(true);
+          }}
+        >
           Play
         </button>
       </div>
+      <Stopwatch isPlaying={isPlaying} />
       <div className="beat-indicator">
         <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
         <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
