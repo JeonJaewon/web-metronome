@@ -55,20 +55,17 @@ function App() {
       <div className="metronome-controller">
         <button
           onClick={() => {
-            schedulerRef.current?.stopMetronome();
-            setBeatIndicatorIndex(0);
-            setIsPlaying(false);
+            if (isPlaying) {
+              schedulerRef.current?.stopMetronome();
+              setBeatIndicatorIndex(0);
+              setIsPlaying(false);
+            } else {
+              schedulerRef.current?.startMetronome();
+              setIsPlaying(true);
+            }
           }}
         >
-          Stop
-        </button>
-        <button
-          onClick={() => {
-            schedulerRef.current?.startMetronome();
-            setIsPlaying(true);
-          }}
-        >
-          Play
+          {isPlaying ? "Stop" : "Play"}
         </button>
       </div>
       <Stopwatch isPlaying={isPlaying} />
