@@ -1,72 +1,130 @@
-const calculateIntervalByBPM = (bpm: number) => {
-  return 60 / bpm;
+import { useSyncExternalStore } from "react";
+import { audioContext, createOscillatorWithConfig } from "./oscillator";
+
+const calculateIntervalByBPM = (bpm: number) => 60 / bpm;
+
+let listeners: (() => void)[] = [];
+
+const subscribe = (listener: () => void) => {
+  listeners = [...listeners, listener];
+  return () => {
+    listeners = listeners.filter((l) => l !== listener);
+  };
 };
 
-const createAudioContext = () => {
-  return new (window.AudioContext || (window as any).webkitAudioContext)();
+const notifyListeners = () => {
+  for (const listener of listeners) {
+    listener();
+  }
 };
 
-export class MetronomeScheduler {
-  public isPlaying: boolean = false;
-  private audioContext: AudioContext = createAudioContext();
-  private nextNoteTime: number = this.audioContext.currentTime;
-  private timer: ReturnType<typeof setTimeout> | null = null;
-  private volume: number = 0.5;
+type MetronomeState = {
+  isPlaying: boolean;
+  bpm: number;
+  volume: number;
+  nextNoteTime: number;
+  timer: ReturnType<typeof setTimeout> | null;
+};
 
-  constructor(
-    private bpm: number,
-    private onTick: (param?: unknown[]) => void
-  ) {}
+type MetronomeAction =
+  | { type: "START" }
+  | { type: "STOP" }
+  | { type: "SET_BPM"; bpm: number }
+  | { type: "SET_VOLUME"; volume: number }
+  | { type: "TICK"; nextNoteTime: number }
+  | { type: "SET_TIMER"; timer: ReturnType<typeof setTimeout> | null };
 
-  tick() {
-    const osc = this.audioContext.createOscillator();
-    const gainNode = this.audioContext.createGain();
-    gainNode.gain.value = this.volume;
-    osc.frequency.value = 500;
-    osc.connect(gainNode);
-    gainNode.connect(this.audioContext.destination);
-    osc.start(this.nextNoteTime);
-    osc.stop(this.nextNoteTime + 0.1);
-    this.onTick();
+const initialState: MetronomeState = {
+  isPlaying: false,
+  bpm: 100,
+  volume: 0.5,
+  nextNoteTime: audioContext.currentTime,
+  timer: null,
+};
+
+let metronomeState = initialState;
+
+const metronomeReducer = (
+  state: MetronomeState,
+  action: MetronomeAction
+): MetronomeState => {
+  switch (action.type) {
+    case "START":
+      return { ...state, isPlaying: true };
+    case "STOP":
+      return { ...state, isPlaying: false, timer: null };
+    case "SET_BPM":
+      return { ...state, bpm: action.bpm };
+    case "SET_VOLUME":
+      return { ...state, volume: action.volume };
+    case "TICK":
+      return { ...state, nextNoteTime: action.nextNoteTime };
+    case "SET_TIMER":
+      return { ...state, timer: action.timer };
+    default:
+      return state;
   }
+};
 
-  scheduleNextNote() {
-    if (!this.isPlaying) return;
+const dispatch = (action: MetronomeAction) => {
+  metronomeState = metronomeReducer(metronomeState, action);
+  notifyListeners();
+};
 
-    while (this.nextNoteTime < this.audioContext.currentTime + 0.1) {
-      this.tick();
-      this.nextNoteTime += calculateIntervalByBPM(this.bpm);
+const getSnapshot = () => metronomeState;
+
+export const useMetronomeScheduler = (onTick?: () => void) => {
+  const scheduleNextNote = () => {
+    if (!metronomeState.isPlaying) return;
+
+    while (metronomeState.nextNoteTime < audioContext.currentTime + 0.1) {
+      const oscillator = createOscillatorWithConfig(audioContext);
+      oscillator.start(metronomeState.nextNoteTime);
+      oscillator.stop(metronomeState.nextNoteTime + 0.1);
+      onTick?.();
+      dispatch({
+        type: "TICK",
+        nextNoteTime:
+          metronomeState.nextNoteTime +
+          calculateIntervalByBPM(metronomeState.bpm),
+      });
     }
-    this.timer = setTimeout(() => this.scheduleNextNote(), 25);
-  }
 
-  startMetronome() {
-    if (!this.isPlaying) {
-      this.isPlaying = true;
-      this.scheduleNextNote();
+    const timer = setTimeout(() => scheduleNextNote(), 25);
+    dispatch({ type: "SET_TIMER", timer });
+  };
+
+  const startMetronome = () => {
+    if (!metronomeState.isPlaying) {
+      dispatch({ type: "START" });
+      scheduleNextNote();
     }
-  }
+  };
 
-  stopMetronome() {
-    if (this.timer !== null) {
-      this.timer = null;
+  const stopMetronome = () => {
+    if (metronomeState.timer !== null) {
+      clearTimeout(metronomeState.timer);
     }
-    this.isPlaying = false;
-  }
+    dispatch({ type: "STOP" });
+  };
 
-  setBPM(bpm: number) {
-    this.bpm = bpm;
-    if (this.isPlaying) {
-      this.stopMetronome();
-      this.startMetronome();
+  const setBPM = (bpm: number) => {
+    dispatch({ type: "SET_BPM", bpm });
+    if (metronomeState.isPlaying) {
+      stopMetronome();
+      startMetronome();
     }
-  }
+  };
 
-  setOnTick(onTick: (param?: unknown[]) => void) {
-    this.onTick = onTick;
-  }
+  const setVolume = (volume: number) => {
+    dispatch({ type: "SET_VOLUME", volume });
+  };
 
-  setVolume(volume: number) {
-    this.volume = volume;
-  }
-}
+  return {
+    ...useSyncExternalStore(subscribe, getSnapshot),
+    startMetronome,
+    stopMetronome,
+    setBPM,
+    setVolume,
+  };
+};

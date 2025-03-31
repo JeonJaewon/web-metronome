@@ -1,44 +1,30 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import "./App.css";
-import Ticker from "./Ticker";
-import Slider from "./Slider";
 import Buttons from "./Buttons";
 import Stopwatch from "./components/Stopwatch";
-import { MetronomeScheduler } from "./metronome";
+import { useMetronomeScheduler } from "./metronome";
+import Slider from "./Slider";
+import Ticker from "./Ticker";
 
 function App() {
-  const [bpm, setBPM] = useState(100);
   const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
-  const [volume, setVolume] = useState(0.5);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const onTick = useCallback(() => {
-    setBeatIndicatorIndex((prev) => (prev + 1) % beatsPerMeasure); // Update tick for visual tracking
-  }, [beatsPerMeasure]);
-
-  const schedulerRef = useRef<MetronomeScheduler>(
-    new MetronomeScheduler(bpm, onTick)
-  );
-
-  useEffect(() => {
-    schedulerRef.current.setBPM(bpm);
-  }, [bpm]);
-
-  useEffect(() => {
-    schedulerRef.current.setOnTick(onTick);
-  }, [onTick]);
-
-  useEffect(() => {
-    schedulerRef.current.setVolume(volume);
-  }, [volume]);
+  const {
+    bpm,
+    isPlaying,
+    volume,
+    startMetronome,
+    setBPM,
+    setVolume,
+    stopMetronome,
+  } = useMetronomeScheduler();
 
   return (
     <>
       <div className="bpm-controller">
-        <button onClick={() => setBPM((bpm) => bpm - 1)}>-</button>
+        <button onClick={() => setBPM(bpm - 1)}>-</button>
         <Slider bpm={bpm} setBPM={setBPM} />
-        <button onClick={() => setBPM((bpm) => bpm + 1)}>+</button>
+        <button onClick={() => setBPM(bpm + 1)}>+</button>
       </div>
       <div className="volume-controller">
         <label htmlFor="volume">Volume</label>
@@ -56,12 +42,10 @@ function App() {
         <button
           onClick={() => {
             if (isPlaying) {
-              schedulerRef.current?.stopMetronome();
+              stopMetronome();
               setBeatIndicatorIndex(0);
-              setIsPlaying(false);
             } else {
-              schedulerRef.current?.startMetronome();
-              setIsPlaying(true);
+              startMetronome();
             }
           }}
         >
