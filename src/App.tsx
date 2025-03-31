@@ -1,10 +1,10 @@
 import { useState } from "react";
 import "./App.css";
-import Buttons from "./Buttons";
-import Stopwatch from "./components/Stopwatch";
-import { useMetronomeScheduler } from "./metronome";
-import Slider from "./Slider";
-import Ticker from "./Ticker";
+import Buttons from "./components/Buttons/Buttons";
+import Stopwatch from "./components/Stopwatch/Stopwatch";
+import { useMetronomeScheduler } from "./lib/metronome";
+import Slider from "./components/Slider/Slider";
+import Ticker from "./components/Ticker/Ticker";
 
 function App() {
   const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
