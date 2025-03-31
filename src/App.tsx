@@ -9,6 +9,11 @@ import Ticker from "./Ticker";
 function App() {
   const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
   const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
+
+  const updateBeatIndicator = () => {
+    setBeatIndicatorIndex((prev) => (prev + 1) % beatsPerMeasure);
+  };
+
   const {
     bpm,
     isPlaying,
@@ -17,7 +22,7 @@ function App() {
     setBPM,
     setVolume,
     stopMetronome,
-  } = useMetronomeScheduler();
+  } = useMetronomeScheduler(updateBeatIndicator);
 
   return (
     <>
