@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
-import { audioContext, createOscillatorWithConfig } from "./oscillator";
-import { calculateIntervalByBPM } from "../utils/calculateIntervalByBPM";
+import { audioContext, createOscillatorWithConfig } from "@/lib/oscillator";
+import { calculateIntervalByBPM } from "@/utils/calculateIntervalByBPM";
 
 let listeners: (() => void)[] = [];
 let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
