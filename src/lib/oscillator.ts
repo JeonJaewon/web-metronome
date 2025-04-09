@@ -4,10 +4,10 @@ export const createAudioContext = () => {
 
 export const audioContext = createAudioContext();
 
-export const createOscillatorWithConfig = (audioContext: AudioContext) => {
+export const createOscillatorWithConfig = (volume: number) => {
   const osc = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
-  gainNode.gain.value = 0.5;
+  gainNode.gain.value = volume;
   osc.frequency.value = 500;
   osc.connect(gainNode);
   gainNode.connect(audioContext.destination);

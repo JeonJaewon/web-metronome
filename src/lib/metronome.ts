@@ -78,7 +78,7 @@ export const useMetronomeScheduler = (onTick?: () => void) => {
     if (!metronomeState.isPlaying) return;
 
     while (metronomeState.nextNoteTime < audioContext.currentTime + 0.1) {
-      const oscillator = createOscillatorWithConfig(audioContext);
+      const oscillator = createOscillatorWithConfig(metronomeState.volume);
       oscillator.start(metronomeState.nextNoteTime);
       oscillator.stop(metronomeState.nextNoteTime + 0.1);
       onTick?.();
