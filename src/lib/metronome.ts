@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from "react";
 import { audioContext, createOscillatorWithConfig } from "./oscillator";
-
-const calculateIntervalByBPM = (bpm: number) => 60 / bpm;
+import { calculateIntervalByBPM } from "../utils/calculateIntervalByBPM";
 
 let listeners: (() => void)[] = [];
+let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
+let nextNoteTime = audioContext.currentTime;
 
 const subscribe = (listener: () => void) => {
   listeners = [...listeners, listener];
@@ -22,24 +23,18 @@ type MetronomeState = {
   isPlaying: boolean;
   bpm: number;
   volume: number;
-  nextNoteTime: number;
-  timer: ReturnType<typeof setTimeout> | null;
 };
 
 type MetronomeAction =
   | { type: "START" }
   | { type: "STOP" }
   | { type: "SET_BPM"; bpm: number }
-  | { type: "SET_VOLUME"; volume: number }
-  | { type: "TICK"; nextNoteTime: number }
-  | { type: "SET_TIMER"; timer: ReturnType<typeof setTimeout> | null };
+  | { type: "SET_VOLUME"; volume: number };
 
 const initialState: MetronomeState = {
   isPlaying: false,
   bpm: 100,
   volume: 0.5,
-  nextNoteTime: audioContext.currentTime,
-  timer: null,
 };
 
 let metronomeState = initialState;
@@ -52,15 +47,11 @@ const metronomeReducer = (
     case "START":
       return { ...state, isPlaying: true };
     case "STOP":
-      return { ...state, isPlaying: false, timer: null };
+      return { ...state, isPlaying: false };
     case "SET_BPM":
       return { ...state, bpm: action.bpm };
     case "SET_VOLUME":
       return { ...state, volume: action.volume };
-    case "TICK":
-      return { ...state, nextNoteTime: action.nextNoteTime };
-    case "SET_TIMER":
-      return { ...state, timer: action.timer };
     default:
       return state;
   }
@@ -77,21 +68,18 @@ export const useMetronomeScheduler = (onTick?: () => void) => {
   const scheduleNextNote = () => {
     if (!metronomeState.isPlaying) return;
 
-    while (metronomeState.nextNoteTime < audioContext.currentTime + 0.1) {
+    const SCHEDULE_BUFFER = 0.1;
+    while (nextNoteTime < audioContext.currentTime + SCHEDULE_BUFFER) {
       const oscillator = createOscillatorWithConfig(metronomeState.volume);
-      oscillator.start(metronomeState.nextNoteTime);
-      oscillator.stop(metronomeState.nextNoteTime + 0.1);
+      oscillator.start(nextNoteTime);
+      const NOTE_DURATION = 0.1;
+      oscillator.stop(nextNoteTime + NOTE_DURATION);
       onTick?.();
-      dispatch({
-        type: "TICK",
-        nextNoteTime:
-          metronomeState.nextNoteTime +
-          calculateIntervalByBPM(metronomeState.bpm),
-      });
+      nextNoteTime = nextNoteTime + calculateIntervalByBPM(metronomeState.bpm);
     }
 
-    const timer = setTimeout(() => scheduleNextNote(), 25);
-    dispatch({ type: "SET_TIMER", timer });
+    const SCHEDULE_DELAY = 25;
+    nextNoteTimer = setTimeout(() => scheduleNextNote(), SCHEDULE_DELAY);
   };
 
   const startMetronome = () => {
@@ -102,9 +90,10 @@ export const useMetronomeScheduler = (onTick?: () => void) => {
   };
 
   const stopMetronome = () => {
-    if (metronomeState.timer !== null) {
-      clearTimeout(metronomeState.timer);
+    if (nextNoteTimer !== undefined) {
+      clearTimeout(nextNoteTimer);
     }
+    nextNoteTime = Infinity;
     dispatch({ type: "STOP" });
   };
 
