@@ -93,7 +93,6 @@ export const useMetronomeScheduler = (onTick?: () => void) => {
     if (nextNoteTimer !== undefined) {
       clearTimeout(nextNoteTimer);
     }
-    nextNoteTime = Infinity;
     dispatch({ type: "STOP" });
   };
 
