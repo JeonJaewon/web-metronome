@@ -1,0 +1,14 @@
+.slider-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slider {
+  width: 80%;
+}
+
+.bpm-display {
+  font-size: 1.2em;
+}

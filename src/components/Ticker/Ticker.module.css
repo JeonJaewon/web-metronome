@@ -1,0 +1,17 @@
+.wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.default_tick {
+  width: 20px;
+  height: 20px;
+  background-color: gray;
+  border-radius: 50%;
+  transition: background-color 0.1s;
+}
+
+.current_tick {
+  composes: default_tick;
+  background-color: blue;
+}
