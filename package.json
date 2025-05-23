@@ -2,6 +2,9 @@
   "name": "web-metronome",
   "private": true,
   "version": "0.0.0",
+  "description": "A free, simple, lightweight online metronome with everything you need for practicing music. Accurate BPM and easy to use.",
+  "homepage": "https://jeonjaewon.github.io/web-metronome",
+  "keywords": ["metronome", "online metronome", "web metronome", "music", "BPM", "practice", "free metronome"],
   "type": "module",
   "scripts": {
     "dev": "vite",
