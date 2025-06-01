@@ -1,17 +1,15 @@
-import { useEffect } from "react";
-import "./App.css";
 import Buttons from "@/components/Buttons/Buttons";
+import { HalfCircleVisualizer } from "@/components/HalfCircleVisualizer/HalfCircleVisualizer";
+import Slider from "@/components/Slider/Slider";
 import Stopwatch from "@/components/Stopwatch/Stopwatch";
 import { useMetronomeScheduler } from "@/lib/metronome";
-import Slider from "@/components/Slider/Slider";
+import "./App.css";
 
 function App() {
   const {
     bpm,
     isPlaying,
     volume,
-    beatsPerMeasure,
-    currentBeat,
     accentedBeatEnabled,
     startMetronome,
     setBPM,
@@ -23,6 +21,7 @@ function App() {
 
   return (
     <>
+      <HalfCircleVisualizer />
       <div className="bpm-controller">
         <button onClick={() => setBPM(bpm - 1)}>-</button>
         <Slider bpm={bpm} setBPM={setBPM} />
