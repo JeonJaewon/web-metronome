@@ -1,10 +1,11 @@
+import Buttons from "@/components/Buttons/Buttons";
+import Slider from "@/components/Slider/Slider";
+import Stopwatch from "@/components/Stopwatch/Stopwatch";
+import Ticker from "@/components/Ticker/Ticker";
+import { HalfCircleVisualizer } from "@/components/HalfCircleVisualizer/HalfCircleVisualizer";
+import { useMetronomeScheduler } from "@/lib/metronome";
 import { useState } from "react";
 import "./App.css";
-import Buttons from "@/components/Buttons/Buttons";
-import Stopwatch from "@/components/Stopwatch/Stopwatch";
-import { useMetronomeScheduler } from "@/lib/metronome";
-import Slider from "@/components/Slider/Slider";
-import Ticker from "@/components/Ticker/Ticker";
 
 function App() {
   const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
@@ -26,6 +27,7 @@ function App() {
 
   return (
     <>
+      <HalfCircleVisualizer />
       <div className="bpm-controller">
         <button onClick={() => setBPM(bpm - 1)}>-</button>
         <Slider bpm={bpm} setBPM={setBPM} />
