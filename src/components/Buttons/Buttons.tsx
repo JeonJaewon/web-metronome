@@ -7,13 +7,14 @@ interface ButtonsProps {
 
 const Buttons: React.FC<ButtonsProps> = ({ setBeatsPerMeasure }) => {
   return (
-    <div className="buttons-container">
+    <fieldset className="buttons-container">
+      <legend>Select beats per measure</legend>
       {[2, 3, 4, 5, 6].map((beats) => (
         <button key={beats} onClick={() => setBeatsPerMeasure(beats)}>
           {beats} Beats
         </button>
       ))}
-    </div>
+    </fieldset>
   );
 };
 

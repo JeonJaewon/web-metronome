@@ -17,6 +17,7 @@ const Slider: React.FC<SliderProps> = ({ bpm, setBPM }) => {
         value={bpm}
         onChange={(e) => setBPM(Number(e.target.value))}
         className="slider"
+        aria-label="BPM Slider"
       />
     </div>
   );
