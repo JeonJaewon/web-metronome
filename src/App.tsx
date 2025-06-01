@@ -1,28 +1,25 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import Buttons from "@/components/Buttons/Buttons";
 import Stopwatch from "@/components/Stopwatch/Stopwatch";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import Slider from "@/components/Slider/Slider";
-import Ticker from "@/components/Ticker/Ticker";
 
 function App() {
-  const [beatIndicatorIndex, setBeatIndicatorIndex] = useState(0);
-  const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
-
-  const updateBeatIndicator = () => {
-    setBeatIndicatorIndex((prev) => (prev + 1) % beatsPerMeasure);
-  };
-
   const {
     bpm,
     isPlaying,
     volume,
+    beatsPerMeasure,
+    currentBeat,
+    accentedBeatEnabled,
     startMetronome,
     setBPM,
     setVolume,
     stopMetronome,
-  } = useMetronomeScheduler(updateBeatIndicator);
+    setBeatsPerMeasure,
+    toggleAccentEnabled,
+  } = useMetronomeScheduler();
 
   return (
     <>
@@ -43,12 +40,20 @@ function App() {
           onChange={(e) => setVolume(parseFloat(e.target.value))}
         />
       </div>
+      <div className="accent-toggle-controller">
+        <label htmlFor="accent-toggle">Accent First Beat</label>
+        <input
+          id="accent-toggle"
+          type="checkbox"
+          checked={accentedBeatEnabled}
+          onChange={toggleAccentEnabled}
+        />
+      </div>
       <div className="metronome-controller">
         <button
           onClick={() => {
             if (isPlaying) {
               stopMetronome();
-              setBeatIndicatorIndex(0);
             } else {
               startMetronome();
             }
@@ -59,7 +64,6 @@ function App() {
       </div>
       <Stopwatch isPlaying={isPlaying} />
       <div className="beat-indicator">
-        <Ticker tick={beatIndicatorIndex} beatsPerMeasure={beatsPerMeasure} />
         <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
       </div>
     </>
