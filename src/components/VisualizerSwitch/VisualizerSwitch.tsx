@@ -1,8 +1,9 @@
-import { useState, useRef, useLayoutEffect } from "react";
-import BeatVisualizer from "../BeatVisualizer/BeatVisualizer";
-import { HalfCircleVisualizer } from "../HalfCircleVisualizer/HalfCircleVisualizer";
-import styles from "./VisualizerSwitch.module.css";
+import BeatVisualizer from "@/components/BeatVisualizer/BeatVisualizer";
+import { HalfCircleVisualizer } from "@/components/HalfCircleVisualizer/HalfCircleVisualizer";
+import styles from "@/components/VisualizerSwitch/VisualizerSwitch.module.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
+import clsx from "clsx";
+import { useLayoutEffect, useRef, useState } from "react";
 
 enum VisualizerType {
   HalfCircle = "HalfCircle",
@@ -44,9 +45,10 @@ export const VisualizerSwitch = () => {
       <div className={styles.segmentedControl}>
         <button
           ref={halfRef}
-          className={`${styles.button} ${
-            selected === VisualizerType.HalfCircle ? styles.active : ""
-          }`}
+          className={clsx(
+            styles.button,
+            selected === VisualizerType.HalfCircle && styles.active
+          )}
           onClick={() => onClickVisualizer(VisualizerType.HalfCircle)}
           aria-label="HalfCircle Visualizer"
         >
@@ -54,9 +56,10 @@ export const VisualizerSwitch = () => {
         </button>
         <button
           ref={beatRef}
-          className={`${styles.button} ${
-            selected === VisualizerType.Beat ? styles.active : ""
-          }`}
+          className={clsx(
+            styles.button,
+            selected === VisualizerType.Beat && styles.active
+          )}
           onClick={() => onClickVisualizer(VisualizerType.Beat)}
           aria-label="Beat Visualizer"
         >
