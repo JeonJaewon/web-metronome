@@ -73,7 +73,7 @@ const HalfCircleIcon = () => (
       cy="8"
       r="3"
       fill="currentColor"
-      stroke="#2196f3"
+      stroke="dodgerblue"
       strokeWidth="1"
     />
   </svg>
@@ -81,7 +81,7 @@ const HalfCircleIcon = () => (
 
 const BeatIcon = () => (
   <svg width="24" height="24" viewBox="0 0 48 24">
-    <circle cx="8" cy="12" r="6" fill="currentColor" />
+    <circle cx="8" cy="12" r="6" fill="dodgerblue" />
     <circle cx="24" cy="12" r="6" fill="#bbb" />
     <circle cx="40" cy="12" r="6" fill="#bbb" />
   </svg>
