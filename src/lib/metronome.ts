@@ -3,7 +3,7 @@ import { audioContext, createOscillatorWithConfig } from "@/lib/oscillator";
 import { calculateIntervalByBPM } from "@/utils/calculateIntervalByBPM";
 
 let listeners: (() => void)[] = [];
-let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
+let nextNoteTimer: number | undefined;
 let nextNoteTime = audioContext.currentTime;
 
 const subscribe = (listener: () => void) => {
@@ -104,8 +104,7 @@ export const useMetronomeScheduler = () => {
       nextNoteTime = nextNoteTime + calculateIntervalByBPM(metronomeState.bpm);
     }
 
-    const SCHEDULE_DELAY = 25;
-    nextNoteTimer = setTimeout(() => scheduleNextNote(), SCHEDULE_DELAY);
+    nextNoteTimer = requestAnimationFrame(scheduleNextNote);
   };
 
   const startMetronome = () => {
@@ -118,13 +117,20 @@ export const useMetronomeScheduler = () => {
 
   const stopMetronome = () => {
     if (nextNoteTimer !== undefined) {
-      clearTimeout(nextNoteTimer);
+      cancelAnimationFrame(nextNoteTimer);
+      nextNoteTimer = undefined;
     }
     dispatch({ type: "STOP" });
   };
 
   const setBPM = (bpm: number) => {
-    dispatch({ type: "SET_BPM", bpm });
+    if (metronomeState.isPlaying) {
+      stopMetronome();
+      dispatch({ type: "SET_BPM", bpm });
+      startMetronome();
+    } else {
+      dispatch({ type: "SET_BPM", bpm });
+    }
   };
 
   const setVolume = (volume: number) => {
