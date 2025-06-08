@@ -1,0 +1,100 @@
+.wrapper {
+  max-width: 600px;
+  padding: 7em 4em 4em 4em;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px; */
+  box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px,
+    rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logoReact:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logoSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logoSpin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.readTheDocs {
+  color: #888;
+}
+
+.bpmController {
+  display: flex;
+}
+.bpmController button {
+  border: 1px solid #ddd;
+}
+
+.metronomeController {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.metronomeController button {
+  flex: 1;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.volumeController {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.volumeController label {
+  margin-right: 10px;
+}
+.volumeController input {
+  width: 65%;
+}
+
+.bpmController,
+.volumeController,
+.beatIndicator {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.accentToggleController {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 0.8em;
+}

@@ -1,9 +1,9 @@
-import Buttons from "@/components/Buttons/Buttons";
+import { BeatSelector } from "@/components/BeatSelector/BeatSelector";
 import { HalfCircleVisualizer } from "@/components/HalfCircleVisualizer/HalfCircleVisualizer";
 import Slider from "@/components/Slider/Slider";
 import Stopwatch from "@/components/Stopwatch/Stopwatch";
 import { useMetronomeScheduler } from "@/lib/metronome";
-import "./App.css";
+import styles from "@/App.module.css";
 
 function App() {
   const {
@@ -20,14 +20,14 @@ function App() {
   } = useMetronomeScheduler();
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <HalfCircleVisualizer />
-      <div className="bpm-controller">
+      <div className={styles.bpmController}>
         <button onClick={() => setBPM(bpm - 1)}>-</button>
         <Slider bpm={bpm} setBPM={setBPM} />
         <button onClick={() => setBPM(bpm + 1)}>+</button>
       </div>
-      <div className="volume-controller">
+      <div className={styles.volumeController}>
         <label htmlFor="volume">Volume</label>
         <input
           id="volume"
@@ -39,7 +39,8 @@ function App() {
           onChange={(e) => setVolume(parseFloat(e.target.value))}
         />
       </div>
-      <div className="accent-toggle-controller">
+      <BeatSelector setBeatsPerMeasure={setBeatsPerMeasure} />
+      <div className={styles.accentToggleController}>
         <label htmlFor="accent-toggle">Accent First Beat</label>
         <input
           id="accent-toggle"
@@ -48,7 +49,7 @@ function App() {
           onChange={toggleAccentEnabled}
         />
       </div>
-      <div className="metronome-controller">
+      <div className={styles.metronomeController}>
         <button
           onClick={() => {
             if (isPlaying) {
@@ -62,10 +63,7 @@ function App() {
         </button>
       </div>
       <Stopwatch isPlaying={isPlaying} />
-      <div className="beat-indicator">
-        <Buttons setBeatsPerMeasure={setBeatsPerMeasure} />
-      </div>
-    </>
+    </div>
   );
 }
 
