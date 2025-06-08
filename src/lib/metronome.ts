@@ -65,12 +65,13 @@ const metronomeReducer = (
       return { ...state, beatsPerMeasure: action.beats, currentBeat: 0 };
     case "TOGGLE_ACCENT_ENABLED":
       return { ...state, accentedBeatEnabled: !state.accentedBeatEnabled };
-    case "INCREMENT_BEAT":
+    case "INCREMENT_BEAT": {
       const nextBeat = state.currentBeat + 1;
       return {
         ...state,
         currentBeat: nextBeat > state.beatsPerMeasure ? 1 : nextBeat,
       };
+    }
     default:
       return state;
   }
