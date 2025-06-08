@@ -69,7 +69,7 @@ export const HalfCircleVisualizer = () => {
           stroke="#888"
           strokeWidth="4"
         />
-        <circle cx={x} cy={y} r="10" fill="#ff5252" />
+        <circle cx={x} cy={y} r="10" fill="dodgerblue" />
       </svg>
     </div>
   );

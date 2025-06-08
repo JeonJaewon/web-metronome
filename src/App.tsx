@@ -1,9 +1,9 @@
+import styles from "@/App.module.css";
 import { BeatSelector } from "@/components/BeatSelector/BeatSelector";
-import { HalfCircleVisualizer } from "@/components/HalfCircleVisualizer/HalfCircleVisualizer";
 import Slider from "@/components/Slider/Slider";
 import Stopwatch from "@/components/Stopwatch/Stopwatch";
+import { VisualizerSwitch } from "@/components/VisualizerSwitch/VisualizerSwitch";
 import { useMetronomeScheduler } from "@/lib/metronome";
-import styles from "@/App.module.css";
 
 function App() {
   const {
@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div className={styles.wrapper}>
-      <HalfCircleVisualizer />
+      <VisualizerSwitch />
       <div className={styles.bpmController}>
         <button onClick={() => setBPM(bpm - 1)}>-</button>
         <Slider bpm={bpm} setBPM={setBPM} />
