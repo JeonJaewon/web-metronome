@@ -3,7 +3,9 @@ import { audioContext, createOscillatorWithConfig } from "@/lib/oscillator";
 import { calculateIntervalByBPM } from "@/utils/calculateIntervalByBPM";
 
 let listeners: (() => void)[] = [];
-let nextNoteTimer: number | undefined;
+let nextNoteAnimationFrame:
+  | ReturnType<typeof requestAnimationFrame>
+  | undefined;
 let nextNoteTime = audioContext.currentTime;
 
 const subscribe = (listener: () => void) => {
@@ -88,8 +90,7 @@ export const useMetronomeScheduler = () => {
   const scheduleNextNote = () => {
     if (!metronomeState.isPlaying) return;
 
-    const SCHEDULE_BUFFER = 0.1;
-    while (nextNoteTime < audioContext.currentTime + SCHEDULE_BUFFER) {
+    while (nextNoteTime <= audioContext.currentTime) {
       dispatch({ type: "INCREMENT_BEAT" });
 
       const isAccented =
@@ -99,12 +100,13 @@ export const useMetronomeScheduler = () => {
         isAccented
       );
       oscillator.start(nextNoteTime);
-      const NOTE_DURATION = 0.1;
+      const NOTE_DURATION = 0.08;
       oscillator.stop(nextNoteTime + NOTE_DURATION);
       nextNoteTime = nextNoteTime + calculateIntervalByBPM(metronomeState.bpm);
+      break;
     }
 
-    nextNoteTimer = requestAnimationFrame(scheduleNextNote);
+    nextNoteAnimationFrame = requestAnimationFrame(scheduleNextNote);
   };
 
   const startMetronome = () => {
@@ -116,9 +118,8 @@ export const useMetronomeScheduler = () => {
   };
 
   const stopMetronome = () => {
-    if (nextNoteTimer !== undefined) {
-      cancelAnimationFrame(nextNoteTimer);
-      nextNoteTimer = undefined;
+    if (nextNoteAnimationFrame !== undefined) {
+      cancelAnimationFrame(nextNoteAnimationFrame);
     }
     dispatch({ type: "STOP" });
   };
