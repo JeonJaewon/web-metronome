@@ -2,9 +2,18 @@ import { useState, useRef, useLayoutEffect } from "react";
 import BeatVisualizer from "../BeatVisualizer/BeatVisualizer";
 import { HalfCircleVisualizer } from "../HalfCircleVisualizer/HalfCircleVisualizer";
 import styles from "./VisualizerSwitch.module.css";
+import { useMetronomeScheduler } from "@/lib/metronome";
+
+enum VisualizerType {
+  HalfCircle = "HalfCircle",
+  Beat = "Beat",
+}
 
 export const VisualizerSwitch = () => {
-  const [selected, setSelected] = useState<"half" | "beat">("half");
+  const { startMetronome, stopMetronome } = useMetronomeScheduler();
+  const [selected, setSelected] = useState<VisualizerType>(
+    VisualizerType.HalfCircle
+  );
   const halfRef = useRef<HTMLButtonElement>(null);
   const beatRef = useRef<HTMLButtonElement>(null);
   const [sliderStyle, setSliderStyle] = useState<{
@@ -13,12 +22,22 @@ export const VisualizerSwitch = () => {
   }>({ left: 0, width: 0 });
 
   useLayoutEffect(() => {
-    const ref = selected === "half" ? halfRef : beatRef;
+    const ref = selected === VisualizerType.HalfCircle ? halfRef : beatRef;
     if (ref.current) {
       const { offsetLeft, offsetWidth } = ref.current;
       setSliderStyle({ left: offsetLeft, width: offsetWidth });
     }
   }, [selected]);
+
+  const onClickVisualizer = (visualizerType: VisualizerType) => {
+    if (selected !== visualizerType) {
+      stopMetronome();
+      startMetronome();
+    } else {
+      startMetronome();
+    }
+    setSelected(visualizerType);
+  };
 
   return (
     <div>
@@ -26,9 +45,9 @@ export const VisualizerSwitch = () => {
         <button
           ref={halfRef}
           className={`${styles.button} ${
-            selected === "half" ? styles.active : ""
+            selected === VisualizerType.HalfCircle ? styles.active : ""
           }`}
-          onClick={() => setSelected("half")}
+          onClick={() => onClickVisualizer(VisualizerType.HalfCircle)}
           aria-label="HalfCircle Visualizer"
         >
           <HalfCircleIcon />
@@ -36,9 +55,9 @@ export const VisualizerSwitch = () => {
         <button
           ref={beatRef}
           className={`${styles.button} ${
-            selected === "beat" ? styles.active : ""
+            selected === VisualizerType.Beat ? styles.active : ""
           }`}
-          onClick={() => setSelected("beat")}
+          onClick={() => onClickVisualizer(VisualizerType.Beat)}
           aria-label="Beat Visualizer"
         >
           <BeatIcon />
@@ -52,7 +71,11 @@ export const VisualizerSwitch = () => {
         />
       </div>
       <div className={styles.visualizerContainer}>
-        {selected === "half" ? <HalfCircleVisualizer /> : <BeatVisualizer />}
+        {selected === VisualizerType.HalfCircle ? (
+          <HalfCircleVisualizer />
+        ) : (
+          <BeatVisualizer />
+        )}
       </div>
     </div>
   );
