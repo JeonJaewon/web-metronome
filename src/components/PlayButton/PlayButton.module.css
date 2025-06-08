@@ -1,0 +1,12 @@
+.metronomeController {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.metronomeController button {
+  flex: 1;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}

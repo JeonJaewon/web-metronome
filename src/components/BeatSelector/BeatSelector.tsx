@@ -1,10 +1,9 @@
 import styles from "@/components/BeatSelector/BeatSelector.module.css";
+import { useMetronomeScheduler } from "@/lib/metronome";
 
-interface Props {
-  setBeatsPerMeasure: (beats: number) => void;
-}
+export const BeatSelector = () => {
+  const { setBeatsPerMeasure } = useMetronomeScheduler();
 
-export const BeatSelector = ({ setBeatsPerMeasure }: Props) => {
   return (
     <div className={styles.beatSelector}>
       <select>

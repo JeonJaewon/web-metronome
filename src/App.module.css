@@ -48,52 +48,8 @@
   color: #888;
 }
 
-.bpmController {
-  display: flex;
-}
-.bpmController button {
-  border: 1px solid #ddd;
-}
-
-.metronomeController {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 50px;
-}
-
-.metronomeController button {
-  flex: 1;
-  border: 1px solid #ddd;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.volumeController {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.volumeController label {
-  margin-right: 10px;
-}
-.volumeController input {
-  width: 65%;
-}
-
-.bpmController,
-.volumeController,
 .beatIndicator {
   padding: 16px;
   border-radius: 8px;
   margin-bottom: 10px;
-}
-
-.accentToggleController {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  font-size: 0.8em;
 }

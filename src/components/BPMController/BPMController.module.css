@@ -1,0 +1,11 @@
+.bpmController {
+  display: flex;
+}
+
+.bpmController button {
+  border: 1px solid #ddd;
+}
+
+.bpmController button:hover {
+  background: #e0e0e0;
+}
