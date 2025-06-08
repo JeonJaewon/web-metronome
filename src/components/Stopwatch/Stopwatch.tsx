@@ -2,7 +2,7 @@ import styles from "@/components/Stopwatch/Stopwatch.module.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useEffect, useState } from "react";
 
-const Stopwatch = () => {
+export const Stopwatch = () => {
   const { isPlaying } = useMetronomeScheduler();
   const [time, setTime] = useState(0);
 
@@ -32,5 +32,3 @@ const Stopwatch = () => {
     <div className={styles.stopwatch}>Playing Time: {formatTime(time)}</div>
   );
 };
-
-export default Stopwatch;

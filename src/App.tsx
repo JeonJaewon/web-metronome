@@ -3,7 +3,7 @@ import { AccentToggleController } from "@/components/AccentToggleController/Acce
 import { BeatSelector } from "@/components/BeatSelector/BeatSelector";
 import { BPMController } from "@/components/BPMController/BPMController";
 import { PlayButton } from "@/components/PlayButton/PlayButton";
-import Stopwatch from "@/components/Stopwatch/Stopwatch";
+import { Stopwatch } from "@/components/Stopwatch/Stopwatch";
 import { VisualizerSwitch } from "@/components/VisualizerSwitch/VisualizerSwitch";
 import { VolumeController } from "@/components/VolumeController/VolumeController";
 
