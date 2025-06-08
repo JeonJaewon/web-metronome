@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import styles from "@/components/Stopwatch/Stopwatch.module.css";
 
 interface StopwatchProps {
   isPlaying: boolean;
@@ -29,7 +30,7 @@ const Stopwatch: React.FC<StopwatchProps> = ({ isPlaying }) => {
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
-  return <div className="timer">Playing Time: {formatTime(time)}</div>;
+  return <div className={styles.timer}>Playing Time: {formatTime(time)}</div>;
 };
 
 export default Stopwatch;
