@@ -5,7 +5,7 @@
   justify-content: center;
   padding: 16px;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin: 20px 0 10px 0;
 }
 
 .volumeController label {
