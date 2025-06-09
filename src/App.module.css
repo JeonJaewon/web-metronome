@@ -6,50 +6,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid #ddd;
-  border-radius: 12px;
   box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px,
     rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logoReact:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logoSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logoSpin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.readTheDocs {
-  color: #888;
-}
-
-.beatIndicator {
-  padding: 16px;
-  border-radius: 8px;
-  margin-bottom: 10px;
 }
