@@ -1,3 +1,7 @@
 .halfCircleVisualizer {
   margin-bottom: 20px;
 }
+
+.halfCircleVisualizer:global {
+  animation: fadeIn 0.1s ease-in;
+}
