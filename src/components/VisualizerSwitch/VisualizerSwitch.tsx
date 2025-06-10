@@ -11,7 +11,7 @@ enum VisualizerType {
 }
 
 export const VisualizerSwitch = () => {
-  const { startMetronome, stopMetronome } = useMetronomeScheduler();
+  const { startMetronome, stopMetronome, isPlaying } = useMetronomeScheduler();
   const [selected, setSelected] = useState<VisualizerType>(
     VisualizerType.HalfCircle
   );
@@ -31,12 +31,11 @@ export const VisualizerSwitch = () => {
   }, [selected]);
 
   const onClickVisualizer = (visualizerType: VisualizerType) => {
-    if (selected !== visualizerType) {
+    if (selected !== visualizerType && isPlaying) {
       stopMetronome();
       startMetronome();
-    } else {
-      startMetronome();
     }
+
     setSelected(visualizerType);
   };
 
