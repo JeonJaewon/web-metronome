@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, useCallback } from "react";
 import { audioContext, createOscillatorWithConfig } from "@/lib/oscillator";
 import { calculateIntervalByBPM } from "@/utils/calculateIntervalByBPM";
 
@@ -85,7 +85,7 @@ const dispatch = (action: MetronomeAction) => {
 const getSnapshot = () => metronomeState;
 
 export const useMetronomeScheduler = () => {
-  const scheduleNextNote = () => {
+  const scheduleNextNote = useCallback(() => {
     if (!metronomeState.isPlaying) return;
 
     while (nextNoteTime <= audioContext.currentTime) {
@@ -106,44 +106,47 @@ export const useMetronomeScheduler = () => {
 
     const SCHEDULE_DELAY_MS = 25;
     nextNoteTimer = setTimeout(() => scheduleNextNote(), SCHEDULE_DELAY_MS);
-  };
+  }, []);
 
-  const startMetronome = () => {
+  const startMetronome = useCallback(() => {
     if (!metronomeState.isPlaying) {
       dispatch({ type: "START" });
       nextNoteTime = audioContext.currentTime;
       scheduleNextNote();
     }
-  };
+  }, [scheduleNextNote]);
 
-  const stopMetronome = () => {
+  const stopMetronome = useCallback(() => {
     if (nextNoteTimer !== undefined) {
       clearTimeout(nextNoteTimer);
     }
     dispatch({ type: "STOP" });
-  };
+  }, []);
 
-  const setBPM = (bpm: number) => {
-    if (metronomeState.isPlaying) {
-      stopMetronome();
-      dispatch({ type: "SET_BPM", bpm });
-      startMetronome();
-    } else {
-      dispatch({ type: "SET_BPM", bpm });
-    }
-  };
+  const setBPM = useCallback(
+    (bpm: number) => {
+      if (metronomeState.isPlaying) {
+        stopMetronome();
+        dispatch({ type: "SET_BPM", bpm });
+        startMetronome();
+      } else {
+        dispatch({ type: "SET_BPM", bpm });
+      }
+    },
+    [startMetronome, stopMetronome]
+  );
 
-  const setVolume = (volume: number) => {
+  const setVolume = useCallback((volume: number) => {
     dispatch({ type: "SET_VOLUME", volume });
-  };
+  }, []);
 
-  const setBeatsPerMeasure = (beats: number) => {
+  const setBeatsPerMeasure = useCallback((beats: number) => {
     dispatch({ type: "SET_BEATS_PER_MEASURE", beats });
-  };
+  }, []);
 
-  const toggleAccentEnabled = () => {
+  const toggleAccentEnabled = useCallback(() => {
     dispatch({ type: "TOGGLE_ACCENT_ENABLED" });
-  };
+  }, []);
 
   return {
     ...useSyncExternalStore(subscribe, getSnapshot),
