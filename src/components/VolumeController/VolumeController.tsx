@@ -1,16 +1,27 @@
 import styles from "@/components/VolumeController/VolumeController.module.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
+import { useKeyControl } from "@/lib/useKeyControl";
 
-const VOLUME_MIN = 0;
-const VOLUME_MAX = 0.5;
-const VOLUME_STEP = 0.005;
+const MIN_VOLUME_LEVEL = 0;
+const MAX_VOLUME_LEVEL = 0.5;
+
+const VOLUME_INPUT_STEP = MAX_VOLUME_LEVEL / 100;
+const VOLUME_KEYBOARD_STEP = VOLUME_INPUT_STEP * 5;
 
 export function VolumeController() {
   const { volume, setVolume } = useMetronomeScheduler();
 
   const getVolumePercentage = (value: number) => {
-    return Math.round((value / VOLUME_MAX) * 100);
+    return Math.round((value / MAX_VOLUME_LEVEL) * 100);
   };
+
+  useKeyControl("ArrowUp", () => {
+    setVolume(Math.min(volume + VOLUME_KEYBOARD_STEP, MAX_VOLUME_LEVEL));
+  });
+
+  useKeyControl("ArrowDown", () => {
+    setVolume(Math.max(volume - VOLUME_KEYBOARD_STEP, MIN_VOLUME_LEVEL));
+  });
 
   return (
     <div className={styles.volumeController}>
@@ -18,9 +29,9 @@ export function VolumeController() {
       <input
         id="volume"
         type="range"
-        min={VOLUME_MIN}
-        max={VOLUME_MAX}
-        step={VOLUME_STEP}
+        min={MIN_VOLUME_LEVEL}
+        max={MAX_VOLUME_LEVEL}
+        step={VOLUME_INPUT_STEP}
         value={volume}
         onChange={(e) => setVolume(parseFloat(e.target.value))}
       />

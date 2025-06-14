@@ -1,13 +1,26 @@
 import styles from "@/components/BPMController/BPMController.module.css";
 import Slider from "@/components/Slider/Slider";
 import { useMetronomeScheduler } from "@/lib/metronome";
+import { useKeyControl } from "@/lib/useKeyControl";
+
+const MIN_BPM = 40;
+const MAX_BPM = 240;
 
 export function BPMController() {
   const { bpm, setBPM } = useMetronomeScheduler();
+
+  useKeyControl("ArrowRight", () => {
+    setBPM(Math.min(bpm + 1, MAX_BPM));
+  });
+
+  useKeyControl("ArrowLeft", () => {
+    setBPM(Math.max(bpm - 1, MIN_BPM));
+  });
+
   return (
     <div className={styles.bpmController}>
       <button onClick={() => setBPM(bpm - 1)}>-</button>
-      <Slider bpm={bpm} setBPM={setBPM} />
+      <Slider bpm={bpm} setBPM={setBPM} maxBPM={MAX_BPM} minBPM={MIN_BPM} />
       <button onClick={() => setBPM(bpm + 1)}>+</button>
     </div>
   );
