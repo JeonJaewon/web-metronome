@@ -19,9 +19,15 @@ export function BPMController() {
 
   return (
     <div className={styles.bpmController}>
-      <button onClick={() => setBPM(bpm - 1)}>-</button>
+      <div className={styles.buttonsContainer}>
+        <button onClick={() => setBPM(bpm - 10)}>-10</button>
+        <button onClick={() => setBPM(bpm - 1)}>-1</button>
+      </div>
       <Slider bpm={bpm} setBPM={setBPM} maxBPM={MAX_BPM} minBPM={MIN_BPM} />
-      <button onClick={() => setBPM(bpm + 1)}>+</button>
+      <div className={styles.buttonsContainer}>
+        <button onClick={() => setBPM(bpm + 1)}>+1</button>
+        <button onClick={() => setBPM(bpm + 10)}>+10</button>
+      </div>
     </div>
   );
 }

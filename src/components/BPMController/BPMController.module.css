@@ -2,8 +2,19 @@
   display: flex;
 }
 
-.bpmController button {
+.buttonsContainer {
+  display: flex;
+}
+
+.buttonsContainer button:first-of-type {
   border: 1px solid #ddd;
+  border-radius: 8px 0px 0 8px;
+}
+
+.buttonsContainer button:last-of-type {
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
 }
 
 .bpmController button:hover {
