@@ -1,5 +1,4 @@
-import React from "react";
-import "./Slider.css";
+import styles from "@/components/Slider/Slider.module.css";
 
 interface SliderProps {
   bpm: number;
@@ -10,15 +9,15 @@ interface SliderProps {
 
 const Slider: React.FC<SliderProps> = ({ bpm, setBPM, maxBPM, minBPM }) => {
   return (
-    <div className="slider-container">
-      <div className="bpm-display">{bpm} BPM</div>
+    <div className={styles.sliderContainer}>
+      <div className={styles.bpmDisplay}>{bpm} BPM</div>
       <input
         type="range"
         min={minBPM}
         max={maxBPM}
         value={bpm}
         onChange={(e) => setBPM(Number(e.target.value))}
-        className="slider"
+        className={styles.slider}
       />
     </div>
   );
