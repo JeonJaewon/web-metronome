@@ -1,23 +1,27 @@
 .bpmController {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .buttonsContainer {
   display: flex;
-  height: 40px;
   align-items: center;
+  height: 32px;
+}
+
+.buttonsContainer button {
+  padding: 6px 16px;
 }
 
 .buttonsContainer button:first-of-type {
   border: 1px solid #ddd;
-  border-radius: 6px 0px 0 6px;
+  border-radius: 4px 0px 0 4px;
 }
 
 .buttonsContainer button:last-of-type {
   border: 1px solid #ddd;
   border-left: none;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 4px 4px 0;
 }
 
 .bpmController button:hover {
