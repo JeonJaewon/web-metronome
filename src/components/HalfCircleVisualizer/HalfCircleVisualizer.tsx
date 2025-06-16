@@ -18,7 +18,7 @@ function getPointOnArc(angleDeg: number): { x: number; y: number } {
 export const HalfCircleVisualizer = () => {
   const { bpm, isPlaying } = useMetronomeScheduler();
   const [{ angle }, dispatch] = useProgressReducer();
-  const rafRef = useRef<ReturnType<typeof requestAnimationFrame>>();
+  const rafRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
 
   const { x, y } = getPointOnArc(angle);
 
