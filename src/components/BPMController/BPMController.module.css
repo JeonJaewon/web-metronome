@@ -1,12 +1,11 @@
 .bpmController {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .buttonsContainer {
   display: flex;
   align-items: center;
-  height: 32px;
 }
 
 .buttonsContainer button {
