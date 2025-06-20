@@ -1,0 +1,49 @@
+.fretboardSvg {
+  border: 1px solid #666;
+  border-radius: 5px;
+  background-color: #f0f0f0; /* Light wood color */
+  margin: 10px;
+  overflow: visible; /* Ensure markers aren't clipped if slightly outside bounds */
+}
+
+.string {
+  stroke: #aaa; /* Metallic grey */
+  stroke-width: 2; /* Thinner strings at top, thicker at bottom could be an enhancement */
+}
+
+.fret {
+  stroke: #999; /* Fret color */
+  stroke-width: 1;
+}
+
+.nut {
+  stroke: #333; /* Darker, thicker nut */
+  stroke-width: 4;
+}
+
+.noteMarker { /* General class for any note marker, if used */
+  fill: #007bff; /* Blue */
+  stroke: #0056b3; /* Darker blue */
+  stroke-width: 1;
+  transition: all 0.1s ease-in-out;
+}
+
+.highlightedNoteMarker {
+  fill: #ff4136; /* Red */
+  stroke: #c41a0e; /* Darker red */
+  stroke-width: 1;
+  /* r: is set dynamically or via SVG attribute */
+}
+
+.inlayDot {
+  fill: #ccc; /* Mother-of-pearl like */
+  stroke: #bbb;
+  stroke-width: 0.5;
+}
+
+.debugText {
+  font-size: 8px;
+  fill: #333;
+  text-anchor: middle;
+  pointer-events: none; /* So they don't interfere with mouse events on notes */
+}
