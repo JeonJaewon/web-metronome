@@ -1,7 +1,7 @@
 import { noteNames } from './scales'; // Assuming noteNames is ['C', 'C#', ..., 'B']
 
 export const standardTuning: string[] = ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'];
-export const fretsToDisplay: number = 12;
+export const fretsToDisplay: number = 21;
 
 /**
  * Parses a note string (e.g., "E2", "C#4") into its name and octave.

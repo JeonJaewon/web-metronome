@@ -7,6 +7,7 @@ interface GuitarFretboardProps {
   fretsToDisplay: number; // e.g., 12
   highlightedNotes: string[]; // e.g., ['C', 'D', 'E', 'G', 'A'] (note names without octaves)
   showOctaves?: boolean; // Optional: for debugging or future features
+  fretNumbersToShow?: number[]; // Optional: array of fret numbers to display
 }
 
 const FRET_WIDTH = 60;
@@ -15,6 +16,8 @@ const PADDING_X = 40; // Padding on left/right of SVG
 const PADDING_Y = 30; // Padding on top/bottom of SVG
 const NOTE_MARKER_RADIUS = 10;
 const INLAY_DOT_RADIUS = 6;
+const FRET_NUMBER_Y_OFFSET = 20; // Distance below the last string for fret numbers
+// const FRET_NUMBER_FONT_SIZE = 10; // Font size is primarily controlled by CSS
 
 // Standard inlay dot positions (single dots)
 const SINGLE_INLAY_FRETS = [3, 5, 7, 9];
@@ -27,13 +30,15 @@ const GuitarFretboard: React.FC<GuitarFretboardProps> = ({
   fretsToDisplay,
   highlightedNotes,
   showOctaves = false, // Default to false
+  fretNumbersToShow,
 }) => {
   const numStrings = tuning.length;
   const fretboardHeight = (numStrings - 1) * STRING_SPACING;
   const fretboardWidth = fretsToDisplay * FRET_WIDTH;
 
+  const fretNumberAreaHeight = fretNumbersToShow && fretNumbersToShow.length > 0 ? FRET_NUMBER_Y_OFFSET + 10 : 0; // Extra 10 for font height
   const svgWidth = fretboardWidth + PADDING_X * 2 + FRET_WIDTH; // Extra FRET_WIDTH for space after last fret
-  const svgHeight = fretboardHeight + PADDING_Y * 2;
+  const svgHeight = fretboardHeight + PADDING_Y * 2 + fretNumberAreaHeight;
 
   const stringNotesElements: JSX.Element[] = [];
 
@@ -153,6 +158,40 @@ const GuitarFretboard: React.FC<GuitarFretboardProps> = ({
 
       {/* Render Highlighted Notes */}
       {stringNotesElements}
+
+      {/* Render Fret Numbers */}
+      {fretNumbersToShow && fretNumbersToShow.map(fretNum => {
+        if (fretNum > 0 && fretNum <= fretsToDisplay) {
+          // Position fret number centered on the fret line itself
+          const xPos = PADDING_X + FRET_WIDTH / 2 + (fretNum -1) * FRET_WIDTH + FRET_WIDTH / 2 ; // centers on the (fretNum)th fret line.
+          // Alternative: PADDING_X + fretNum * FRET_WIDTH - FRET_WIDTH / 2; // centers in the middle of (fretNum)th fret space.
+          // The prompt asks for "centered on the fret position", which usually means the line.
+          // If it meant the space before the fret line (like inlay dots), it would be:
+          // const xPos = PADDING_X + (fretNum -1) * FRET_WIDTH + FRET_WIDTH / 2 + FRET_WIDTH/2;
+          // Let's use the prompt's "centered on the fret position" (taken as the fret line itself)
+          // The fret lines are at PADDING_X + FRET_WIDTH/2 + fretIndex * FRET_WIDTH.
+          // So for fretNum (which is 1-indexed), fretIndex is fretNum.
+          // No, fret 1 is at PADDING_X + FRET_WIDTH/2 + 1 * FRET_WIDTH (if fretIndex = fretNum)
+          // The first actual fret line (fret 1) is at x = PADDING_X + FRET_WIDTH/2 + FRET_WIDTH
+          // The nut is fretIndex = 0. So fret 1 is fretIndex = 1.
+          // Fret line `f` is at `PADDING_X + FRET_WIDTH / 2 + f * FRET_WIDTH`
+          const textXPos = PADDING_X + FRET_WIDTH / 2 + fretNum * FRET_WIDTH;
+
+          const yPos = PADDING_Y + fretboardHeight + FRET_NUMBER_Y_OFFSET;
+          return (
+            <text
+              key={`fret-num-${fretNum}`}
+              x={textXPos}
+              y={yPos}
+              className={styles.fretNumberText}
+              textAnchor="middle"
+            >
+              {fretNum}
+            </text>
+          );
+        }
+        return null;
+      })}
     </svg>
   );
 };

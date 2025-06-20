@@ -17,6 +17,7 @@ const PentatonicFretboardDisplay: React.FC<PentatonicFretboardDisplayProps> = ({
 }) => {
   const scaleNotes = getPentatonicScale(rootNote);
   const title = `${rootNote} Major Pentatonic Scale`;
+  const specificFretNumbers = [3, 5, 7, 9, 12, 15, 17, 19, 21]; // Added 21 to match new default frets
 
   return (
     <div className={styles.fretboardDisplayContainer}>
@@ -26,6 +27,7 @@ const PentatonicFretboardDisplay: React.FC<PentatonicFretboardDisplayProps> = ({
         fretsToDisplay={fretsToDisplay}
         highlightedNotes={scaleNotes}
         showOctaves={false} // Explicitly not showing octaves on the note markers themselves for this view
+        fretNumbersToShow={specificFretNumbers}
       />
     </div>
   );

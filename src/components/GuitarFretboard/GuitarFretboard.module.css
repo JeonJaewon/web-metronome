@@ -47,3 +47,11 @@
   text-anchor: middle;
   pointer-events: none; /* So they don't interfere with mouse events on notes */
 }
+
+.fretNumberText {
+  font-size: 10px; /* Adjusted for typical fretboard display */
+  fill: #555;    /* Dark grey for good visibility */
+  font-family: Arial, sans-serif;
+  text-anchor: middle; /* Ensures the number is centered on the fret mark */
+  pointer-events: none; /* So they don't interfere with mouse events */
+}
