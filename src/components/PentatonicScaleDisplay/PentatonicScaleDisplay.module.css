@@ -1,0 +1,20 @@
+.scaleContainer {
+  padding: 15px;
+  margin: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  display: flex; /* Aligns notes in a row */
+  flex-wrap: wrap; /* Allows notes to wrap to the next line if needed */
+}
+
+.noteItem {
+  margin-right: 8px;
+  margin-bottom: 8px; /* Added for spacing if notes wrap */
+  padding: 5px 10px;
+  background-color: #e0e0e0;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 1.1em;
+}
