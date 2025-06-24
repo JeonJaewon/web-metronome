@@ -1,20 +1,23 @@
 import styles from "@/components/BeatSelector/BeatSelector.module.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
+import { Select } from "@mantine/core";
+
+const toMantineSelectValue = (value: number) => value.toString();
 
 export const BeatSelector = () => {
   const { setBeatsPerMeasure, beatsPerMeasure } = useMetronomeScheduler();
   return (
     <div className={styles.beatSelector}>
-      <select
-        onChange={(e) => setBeatsPerMeasure(Number(e.target.value))}
-        value={beatsPerMeasure}
-      >
-        {[2, 3, 4, 5, 6].map((beats) => (
-          <option key={beats} value={beats}>
-            {beats} Beats
-          </option>
-        ))}
-      </select>
+      <Select
+        label="Beat Options"
+        placeholder="Select beats"
+        data={[2, 3, 4, 5, 6].map((value) => ({
+          value: toMantineSelectValue(value),
+          label: `${value} Beats`,
+        }))}
+        value={toMantineSelectValue(beatsPerMeasure)}
+        onChange={(value) => setBeatsPerMeasure(Number(value))}
+      />
     </div>
   );
 };
