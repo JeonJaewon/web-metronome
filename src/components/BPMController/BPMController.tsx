@@ -1,7 +1,7 @@
 import styles from "@/components/BPMController/BPMController.module.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useKeyControl } from "@/lib/useKeyControl";
-import { Box, Slider, Text } from "@mantine/core";
+import { Box, Flex, Slider, Text } from "@mantine/core";
 
 const MIN_BPM = 40;
 const MAX_BPM = 240;
@@ -18,28 +18,29 @@ export function BPMController() {
   });
 
   return (
-    <div className={styles.bpmController}>
-      <div className={styles.buttonsContainer}>
-        <button onClick={() => setBPM(bpm - 10)}>-10</button>
-        <button onClick={() => setBPM(bpm - 1)}>-1</button>
-      </div>
-      <Box w="100%" px="md">
+    <Box w="100%">
+      <Flex justify="space-between" align="center">
+        <div className={styles.buttonsContainer}>
+          <button onClick={() => setBPM(bpm - 10)}>-10</button>
+          <button onClick={() => setBPM(bpm - 1)}>-1</button>
+        </div>
         <Text fw={700} size="xl">
           {bpm} BPM
         </Text>
-        <Slider
-          value={bpm}
-          min={MIN_BPM}
-          max={MAX_BPM}
-          step={1}
-          onChange={(value) => setBPM(value)}
-          label={(value) => `${value} BPM`}
-        />
-      </Box>
-      <div className={styles.buttonsContainer}>
-        <button onClick={() => setBPM(bpm + 1)}>+1</button>
-        <button onClick={() => setBPM(bpm + 10)}>+10</button>
-      </div>
-    </div>
+        <div className={styles.buttonsContainer}>
+          <button onClick={() => setBPM(bpm + 1)}>+1</button>
+          <button onClick={() => setBPM(bpm + 10)}>+10</button>
+        </div>
+      </Flex>
+      <Slider
+        mt="md"
+        value={bpm}
+        min={MIN_BPM}
+        max={MAX_BPM}
+        step={1}
+        onChange={(value) => setBPM(value)}
+        label={(value) => `${value} BPM`}
+      />
+    </Box>
   );
 }
