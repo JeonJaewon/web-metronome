@@ -18,15 +18,15 @@ export function BPMController() {
   });
 
   return (
-    <Box w="100%">
-      <Flex justify="space-between" align="center">
+    <Box w="80%" m="0 auto">
+      <Text fw={700} size="34px">
+        {bpm} BPM
+      </Text>
+      <Flex mt="12px" justify="space-between" align="center">
         <div className={styles.buttonsContainer}>
           <button onClick={() => setBPM(bpm - 10)}>-10</button>
           <button onClick={() => setBPM(bpm - 1)}>-1</button>
         </div>
-        <Text fw={700} size="xl">
-          {bpm} BPM
-        </Text>
         <div className={styles.buttonsContainer}>
           <button onClick={() => setBPM(bpm + 1)}>+1</button>
           <button onClick={() => setBPM(bpm + 10)}>+10</button>
