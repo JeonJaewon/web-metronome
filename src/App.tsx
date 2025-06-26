@@ -13,8 +13,18 @@ function App() {
     <div className={styles.wrapper}>
       <VisualizerSwitch />
       <BPMController />
-      <BeatSelector />
-      <AccentToggleController />
+      <Flex
+        mt="xl"
+        p="lg"
+        gap="40px"
+        bd="1px solid #ddd"
+        bdrs={8}
+        justify="center"
+        align="centejr"
+      >
+        <BeatSelector />
+        <AccentToggleController />
+      </Flex>
       <Flex gap="sm" mt="xl">
         <PlayButton />
         <VolumeController />
