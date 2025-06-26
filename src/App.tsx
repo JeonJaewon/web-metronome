@@ -1,4 +1,4 @@
-import styles from "@/App.module.css";
+import * as styles from "@/App.css";
 import { AccentToggleController } from "@/components/AccentToggleController/AccentToggleController";
 import { BeatSelector } from "@/components/BeatSelector/BeatSelector";
 import { BPMController } from "@/components/BPMController/BPMController";

@@ -1,4 +1,4 @@
-import styles from "@/components/AccentToggleController/AccentToggleController.module.css";
+import * as styles from "@/components/AccentToggleController/AccentToggleController.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 
 export function AccentToggleController() {

@@ -1,9 +1,0 @@
-.metronomeController {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 2;
-  border: 1px solid #ddd;
-  background-color: white;
-  gap: 4px;
-}

@@ -1,4 +1,4 @@
-import styles from "@/components/VolumeController/VolumeController.module.css";
+import * as styles from "@/components/VolumeController/VolumeController.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useKeyControl } from "@/lib/useKeyControl";
 import { Flex, Slider } from "@mantine/core";

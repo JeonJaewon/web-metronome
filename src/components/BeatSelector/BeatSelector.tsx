@@ -1,4 +1,4 @@
-import styles from "@/components/BeatSelector/BeatSelector.module.css";
+import * as styles from "@/components/BeatSelector/BeatSelector.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { Select } from "@mantine/core";
 

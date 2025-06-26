@@ -1,4 +1,4 @@
-import styles from "@/components/BPMController/BPMController.module.css";
+import * as styles from "@/components/BPMController/BPMController.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useKeyControl } from "@/lib/useKeyControl";
 import { Box, Flex, Slider, Text } from "@mantine/core";
@@ -24,12 +24,32 @@ export function BPMController() {
       </Text>
       <Flex mt="12px" justify="space-between" align="center">
         <div className={styles.buttonsContainer}>
-          <button onClick={() => setBPM(bpm - 10)}>-10</button>
-          <button onClick={() => setBPM(bpm - 1)}>-1</button>
+          <button
+            className={styles.bpmAdjustButton}
+            onClick={() => setBPM(bpm - 10)}
+          >
+            -10
+          </button>
+          <button
+            className={styles.bpmAdjustButton}
+            onClick={() => setBPM(bpm - 1)}
+          >
+            -1
+          </button>
         </div>
         <div className={styles.buttonsContainer}>
-          <button onClick={() => setBPM(bpm + 1)}>+1</button>
-          <button onClick={() => setBPM(bpm + 10)}>+10</button>
+          <button
+            className={styles.bpmAdjustButton}
+            onClick={() => setBPM(bpm + 1)}
+          >
+            +1
+          </button>
+          <button
+            className={styles.bpmAdjustButton}
+            onClick={() => setBPM(bpm + 10)}
+          >
+            +10
+          </button>
         </div>
       </Flex>
       <Slider

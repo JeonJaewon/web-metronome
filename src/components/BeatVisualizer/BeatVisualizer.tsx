@@ -1,5 +1,5 @@
 import { useMetronomeScheduler } from "@/lib/metronome";
-import styles from "@/components/BeatVisualizer/BeatVisualizer.module.css";
+import * as styles from "@/components/BeatVisualizer/BeatVisualizer.css";
 
 const BeatVisualizer = () => {
   const { beatsPerMeasure, currentBeat } = useMetronomeScheduler();

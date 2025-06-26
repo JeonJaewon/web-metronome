@@ -1,4 +1,4 @@
-import styles from "@/components/PlayButton/PlayButton.module.css";
+import * as styles from "@/components/PlayButton/PlayButton.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useKeyControl } from "@/lib/useKeyControl";
 

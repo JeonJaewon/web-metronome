@@ -1,7 +1,7 @@
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useEffect, useRef } from "react";
 import { useProgressReducer } from "@/components/HalfCircleVisualizer/useProgressReducer";
-import styles from "@/components/HalfCircleVisualizer/HalfCircleVisualizer.module.css";
+import * as styles from "@/components/HalfCircleVisualizer/HalfCircleVisualizer.css";
 
 const RADIUS = 100;
 const CENTER = 120;

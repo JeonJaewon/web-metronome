@@ -1,4 +1,4 @@
-import styles from "@/components/Slider/Slider.module.css";
+import * as styles from "@/components/Slider/Slider.css";
 
 interface SliderProps {
   bpm: number;

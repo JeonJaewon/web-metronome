@@ -1,9 +1,0 @@
-.beatSelector {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  & select {
-    background-color: #f9f9f9;
-    color: black;
-  }
-}

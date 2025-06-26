@@ -1,4 +1,4 @@
-import styles from "@/components/Stopwatch/Stopwatch.module.css";
+import * as styles from "@/components/Stopwatch/Stopwatch.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useEffect, useState } from "react";
 
