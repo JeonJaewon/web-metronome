@@ -16,11 +16,12 @@ function App() {
       <Flex
         mt="xl"
         p="lg"
-        gap="40px"
+        gap="20px"
+        direction="column"
         bd="1px solid #ddd"
         bdrs={8}
         justify="center"
-        align="centejr"
+        align="center"
       >
         <BeatSelector />
         <AccentToggleController />
