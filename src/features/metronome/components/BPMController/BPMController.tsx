@@ -9,7 +9,7 @@ const MAX_BPM = 240;
 
 export function BPMController() {
   const { bpm, setBPM } = useMetronomeScheduler();
-  const { focusedFeature, setFocusedFeature } = useFeatureContext();
+  const { focusedFeature } = useFeatureContext();
 
   useKeyControl("ArrowRight", () => {
     setBPM(Math.min(bpm + 1, MAX_BPM));
@@ -24,7 +24,11 @@ export function BPMController() {
       <Text fw={700} size="34px">
         {bpm} BPM
       </Text>
-      <Flex mt="12px" justify="space-between" align="center">
+      <Flex
+        mt={focusedFeature === "metronome" ? "12px" : "-30px"}
+        justify="space-between"
+        align="center"
+      >
         <div className={styles.buttonsContainer}>
           <button
             className={styles.bpmAdjustButton}
