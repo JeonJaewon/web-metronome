@@ -1,4 +1,5 @@
 import * as styles from "@/components/BPMController/BPMController.css";
+import { useFeatureContext } from "@/contexts/featureContext";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import { useKeyControl } from "@/lib/useKeyControl";
 import { Box, Flex, Slider, Text } from "@mantine/core";
@@ -8,6 +9,7 @@ const MAX_BPM = 240;
 
 export function BPMController() {
   const { bpm, setBPM } = useMetronomeScheduler();
+  const { focusedFeature, setFocusedFeature } = useFeatureContext();
 
   useKeyControl("ArrowRight", () => {
     setBPM(Math.min(bpm + 1, MAX_BPM));
@@ -52,15 +54,17 @@ export function BPMController() {
           </button>
         </div>
       </Flex>
-      <Slider
-        mt="md"
-        value={bpm}
-        min={MIN_BPM}
-        max={MAX_BPM}
-        step={1}
-        onChange={(value) => setBPM(value)}
-        label={(value) => `${value} BPM`}
-      />
+      {focusedFeature === "metronome" && (
+        <Slider
+          mt="md"
+          value={bpm}
+          min={MIN_BPM}
+          max={MAX_BPM}
+          step={1}
+          onChange={(value) => setBPM(value)}
+          label={(value) => `${value} BPM`}
+        />
+      )}
     </Box>
   );
 }

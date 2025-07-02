@@ -1,5 +1,5 @@
-import BeatVisualizer from "@/components/BeatVisualizer/BeatVisualizer";
-import { HalfCircleVisualizer } from "@/components/HalfCircleVisualizer/HalfCircleVisualizer";
+import BeatVisualizer from "@/features/metronome/components/BeatVisualizer/BeatVisualizer";
+import { HalfCircleVisualizer } from "@/features/metronome/components/HalfCircleVisualizer/HalfCircleVisualizer";
 import * as styles from "@/components/VisualizerSwitch/VisualizerSwitch.css";
 import { useMetronomeScheduler } from "@/lib/metronome";
 import clsx from "clsx";
