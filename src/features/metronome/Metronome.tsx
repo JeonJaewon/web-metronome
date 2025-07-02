@@ -25,7 +25,6 @@ export const Metronome = () => {
       setTargetY(0);
     }
   }, [focusedFeature]);
-  console.log(targetY);
 
   return (
     <motion.div
@@ -33,10 +32,15 @@ export const Metronome = () => {
       className={styles.wrapper}
       initial={{ y: 0, scale: 1 }}
       animate={
-        focusedFeature !== "metronome" && {
-          y: targetY + 60,
-          scale: 0.8,
-        }
+        focusedFeature !== "metronome"
+          ? {
+              y: targetY + 60,
+              scale: 0.8,
+            }
+          : {
+              y: 0,
+              scale: 1,
+            }
       }
       transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
     >

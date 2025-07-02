@@ -1,15 +1,11 @@
-import { useFeatureContext } from "@/contexts/featureContext";
+import { FeatureTabs } from "@/components/FeatureTabs/FeatureTabs";
 import { Metronome } from "@/features/metronome/Metronome";
 
 export default function App() {
-  const { setFocusedFeature } = useFeatureContext();
-
   return (
-    <>
-      <button onClick={() => setFocusedFeature("guitarScales")}>
-        Switch to Guitar Scales
-      </button>
+    <div>
       <Metronome />
-    </>
+      <FeatureTabs />
+    </div>
   );
 }
