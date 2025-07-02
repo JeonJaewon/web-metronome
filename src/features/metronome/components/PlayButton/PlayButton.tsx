@@ -1,3 +1,4 @@
+import { useFeatureContext } from "@/contexts/featureContext";
 import * as styles from "@/features/metronome/components/PlayButton/PlayButton.css";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
@@ -5,29 +6,31 @@ import { useKeyControl } from "@/hooks/useKeyControl";
 const SPACEBAR_KEY = " ";
 
 export const PlayButton = () => {
+  const { focusedFeature } = useFeatureContext();
   const { isPlaying, startMetronome, stopMetronome } = useMetronomeScheduler();
 
-  useKeyControl(SPACEBAR_KEY, () => {
+  const toggleMetronome = () => {
     if (isPlaying) {
       stopMetronome();
     } else {
       startMetronome();
     }
-  });
+  };
+
+  useKeyControl(SPACEBAR_KEY, toggleMetronome);
+
+  if (focusedFeature === "metronome") {
+    return (
+      <button className={styles.metronomeController} onClick={toggleMetronome}>
+        {isPlaying ? <PauseIcon /> : <PlayIcon />}
+        {isPlaying ? "Pause" : "Play"}
+      </button>
+    );
+  }
 
   return (
-    <button
-      className={styles.metronomeController}
-      onClick={() => {
-        if (isPlaying) {
-          stopMetronome();
-        } else {
-          startMetronome();
-        }
-      }}
-    >
+    <button className={styles.unfocusedPlayButton}>
       {isPlaying ? <PauseIcon /> : <PlayIcon />}
-      {isPlaying ? "Pause" : "Play"}
     </button>
   );
 };

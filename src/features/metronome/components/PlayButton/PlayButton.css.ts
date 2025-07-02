@@ -9,3 +9,8 @@ export const metronomeController = style({
   backgroundColor: "white",
   gap: "4px",
 });
+
+export const unfocusedPlayButton = style({
+  width: "80%",
+  margin: "20px auto 0 auto",
+});
