@@ -1,5 +1,5 @@
-import * as styles from "@/components/AccentToggleController/AccentToggleController.css";
-import { useMetronomeScheduler } from "@/lib/metronome";
+import * as styles from "@/features/metronome/components/AccentToggleController/AccentToggleController.css";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 
 export function AccentToggleController() {
   const { accentedBeatEnabled, toggleAccentEnabled } = useMetronomeScheduler();

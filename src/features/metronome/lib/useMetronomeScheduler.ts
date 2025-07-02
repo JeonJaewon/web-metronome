@@ -1,5 +1,8 @@
 import { useSyncExternalStore, useCallback } from "react";
-import { audioContext, createOscillatorWithConfig } from "@/lib/oscillator";
+import {
+  audioContext,
+  createOscillatorWithConfig,
+} from "@/features/metronome/lib/oscillator";
 import { calculateIntervalByBPM } from "@/utils/calculateIntervalByBPM";
 
 let listeners: (() => void)[] = [];

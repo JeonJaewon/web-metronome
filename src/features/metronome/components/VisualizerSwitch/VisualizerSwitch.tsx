@@ -1,7 +1,7 @@
 import BeatVisualizer from "@/features/metronome/components/BeatVisualizer/BeatVisualizer";
 import { HalfCircleVisualizer } from "@/features/metronome/components/HalfCircleVisualizer/HalfCircleVisualizer";
-import * as styles from "@/components/VisualizerSwitch/VisualizerSwitch.css";
-import { useMetronomeScheduler } from "@/lib/metronome";
+import * as styles from "@/features/metronome/components/VisualizerSwitch/VisualizerSwitch.css";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import clsx from "clsx";
 import { useLayoutEffect, useRef, useState } from "react";
 

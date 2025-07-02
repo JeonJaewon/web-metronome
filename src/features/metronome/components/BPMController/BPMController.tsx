@@ -1,7 +1,7 @@
-import * as styles from "@/components/BPMController/BPMController.css";
+import * as styles from "@/features/metronome/components/BPMController/BPMController.css";
 import { useFeatureContext } from "@/contexts/featureContext";
-import { useMetronomeScheduler } from "@/lib/metronome";
-import { useKeyControl } from "@/lib/useKeyControl";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { useKeyControl } from "@/hooks/useKeyControl";
 import { Box, Flex, Slider, Text } from "@mantine/core";
 
 const MIN_BPM = 40;

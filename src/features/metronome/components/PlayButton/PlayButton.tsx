@@ -1,6 +1,6 @@
-import * as styles from "@/components/PlayButton/PlayButton.css";
-import { useMetronomeScheduler } from "@/lib/metronome";
-import { useKeyControl } from "@/lib/useKeyControl";
+import * as styles from "@/features/metronome/components/PlayButton/PlayButton.css";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { useKeyControl } from "@/hooks/useKeyControl";
 
 const SPACEBAR_KEY = " ";
 

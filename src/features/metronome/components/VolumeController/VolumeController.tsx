@@ -1,6 +1,6 @@
-import * as styles from "@/components/VolumeController/VolumeController.css";
-import { useMetronomeScheduler } from "@/lib/metronome";
-import { useKeyControl } from "@/lib/useKeyControl";
+import * as styles from "@/features/metronome/components/VolumeController/VolumeController.css";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { useKeyControl } from "@/hooks/useKeyControl";
 import { Flex, Slider } from "@mantine/core";
 import { useState } from "react";
 

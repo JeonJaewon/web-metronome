@@ -1,4 +1,4 @@
-import * as styles from "@/components/Slider/Slider.css";
+import * as styles from "@/features/metronome/components/Slider/Slider.css";
 
 interface SliderProps {
   bpm: number;

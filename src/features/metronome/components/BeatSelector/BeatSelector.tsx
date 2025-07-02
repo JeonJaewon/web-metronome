@@ -1,5 +1,5 @@
-import * as styles from "@/components/BeatSelector/BeatSelector.css";
-import { useMetronomeScheduler } from "@/lib/metronome";
+import * as styles from "@/features/metronome/components/BeatSelector/BeatSelector.css";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { Select } from "@mantine/core";
 
 const toMantineSelectValue = (value: number) => value.toString();
