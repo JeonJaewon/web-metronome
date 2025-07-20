@@ -8,59 +8,48 @@ import { Stopwatch } from "@/features/metronome/components/Stopwatch/Stopwatch";
 import { VisualizerSwitch } from "@/features/metronome/components/VisualizerSwitch/VisualizerSwitch";
 import { VolumeController } from "@/features/metronome/components/VolumeController/VolumeController";
 import { Flex } from "@mantine/core";
-import { motion } from "motion/react";
-import { useLayoutEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, TargetAndTransition } from "motion/react";
+import { useRef } from "react";
 
 export const Metronome = () => {
   const ref = useRef<HTMLDivElement | null>(null);
   const { focusedFeature } = useFeatureContext();
-  const [targetY, setTargetY] = useState(0);
 
-  useLayoutEffect(() => {
-    if (focusedFeature !== "metronome" && ref.current) {
-      // focusedFeature가 metronome으로 변경된 후 실제 DOM 변경이 완료되면 위치 계산
-      const rect = ref.current.getBoundingClientRect();
-      setTargetY(-rect.top);
-    } else {
-      setTargetY(0);
-    }
-  }, [focusedFeature]);
+  const metronomeAnimationProps: TargetAndTransition =
+    focusedFeature === "metronome"
+      ? {
+          scale: 1,
+        }
+      : {
+          y: -40,
+          scale: 0.8,
+        };
 
   return (
     <motion.div
       ref={ref}
       className={styles.wrapper}
-      initial={{ y: 0, scale: 1 }}
-      animate={
-        focusedFeature !== "metronome"
-          ? {
-              y: targetY + 60,
-              scale: 0.8,
-            }
-          : {
-              y: 0,
-              scale: 1,
-            }
-      }
-      transition={{ type: "spring", bounce: 0.2, duration: 0.4 }}
+      initial={{ scale: 1 }}
+      animate={metronomeAnimationProps}
     >
-      {focusedFeature === "metronome" && <VisualizerSwitch />}
+      <AnimatePresence>
+        {focusedFeature === "metronome" && (
+          <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0, height: 0 }}>
+            <VisualizerSwitch />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <BPMController />
-      {focusedFeature === "metronome" && (
-        <Flex
-          mt="xl"
-          p="lg"
-          gap="20px"
-          direction="column"
-          bd="1px solid #ddd"
-          bdrs={8}
-          justify="center"
-          align="center"
-        >
-          <BeatSelector />
-          <AccentToggleController />
-        </Flex>
-      )}
+      <AnimatePresence>
+        {focusedFeature === "metronome" && (
+          <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0, height: 0 }}>
+            <div className={styles.rhythmSection}>
+              <BeatSelector />
+              <AccentToggleController />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {focusedFeature === "metronome" ? (
         <Flex gap="sm" mt="xl">
           <PlayButton />
