@@ -6,7 +6,8 @@ export const fretboard = style({
   gridTemplateColumns: "repeat(13, 40px)",
   gap: "2px",
   background: "#222",
-  borderRadius: "8px", padding: "16px 8px",
+  borderRadius: "8px",
+  padding: "16px 8px",
   boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
   width: "max-content",
 });

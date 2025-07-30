@@ -29,12 +29,11 @@ export const Metronome = () => {
     <motion.div
       ref={ref}
       className={styles.wrapper}
-      initial={{ scale: 1 }}
       animate={metronomeAnimationProps}
     >
       <AnimatePresence>
         {focusedFeature === "metronome" && (
-          <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0, height: 0 }}>
+          <motion.div exit={{ opacity: 0, height: 0 }}>
             <VisualizerSwitch />
           </motion.div>
         )}
@@ -42,7 +41,7 @@ export const Metronome = () => {
       <BPMController />
       <AnimatePresence>
         {focusedFeature === "metronome" && (
-          <motion.div animate={{ opacity: 1 }} exit={{ opacity: 0, height: 0 }}>
+          <motion.div exit={{ opacity: 0, height: 0 }}>
             <div className={styles.rhythmSection}>
               <BeatSelector />
               <AccentToggleController />

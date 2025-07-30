@@ -1,5 +1,5 @@
+import * as styles from "@/features/guitarScales/components/FretCell.css";
 import clsx from "clsx";
-import * as styles from "./FretCell.css";
 
 interface FretCellProps {
   isMarked: boolean;
