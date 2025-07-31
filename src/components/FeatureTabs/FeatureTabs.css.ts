@@ -8,6 +8,9 @@ export const featureTabs = style({
   width: "100%",
   transform: "translateX(-50%)",
   height: "80px",
+  backgroundColor: "white",
+  zIndex: 3,
+  opacity: 0.9,
 });
 
 export const featureTab = style({
