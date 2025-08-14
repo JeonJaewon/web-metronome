@@ -6,7 +6,6 @@ export enum AnimationDirection {
 }
 
 export type ProgressState = {
-  progress: number;
   direction: AnimationDirection;
   angle: number;
 };
@@ -26,14 +25,15 @@ function progressReducer(
 ): ProgressState {
   switch (action.type) {
     case "SET_PROGRESS": {
-      const progress =
+      const angle = calcAngle(
         state.direction === AnimationDirection.FORWARD
           ? action.progress
-          : 1 - action.progress;
+          : 1 - action.progress
+      );
+
       return {
         ...state,
-        progress,
-        angle: calcAngle(progress),
+        angle,
       };
     }
     case "TOGGLE_DIRECTION": {
@@ -41,19 +41,18 @@ function progressReducer(
         state.direction === AnimationDirection.FORWARD
           ? AnimationDirection.BACKWARD
           : AnimationDirection.FORWARD;
-      const progress =
-        state.direction === AnimationDirection.FORWARD
+      const angle = calcAngle(
+        newDirection === AnimationDirection.FORWARD
           ? action.progress
-          : 1 - action.progress;
+          : 1 - action.progress
+      );
       return {
-        progress,
         direction: newDirection,
-        angle: calcAngle(progress),
+        angle,
       };
     }
     case "CLEAR_STATE": {
       return {
-        progress: 0,
         direction: AnimationDirection.FORWARD,
         angle: 180,
       };
@@ -65,7 +64,6 @@ function progressReducer(
 
 export const useProgressReducer = () => {
   return useReducer(progressReducer, {
-    progress: 0,
     direction: AnimationDirection.FORWARD,
     angle: 180,
   });

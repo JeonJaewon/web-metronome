@@ -5,7 +5,6 @@ import * as styles from "@/features/metronome/components/HalfCircleVisualizer/Ha
 
 const RADIUS = 100;
 const CENTER = 120;
-const MILLISECONDS_PER_MINUTE = 60000;
 
 function getPointOnArc(angleDeg: number): { x: number; y: number } {
   const angleRad = (Math.PI * angleDeg) / 180;
@@ -16,9 +15,10 @@ function getPointOnArc(angleDeg: number): { x: number; y: number } {
 }
 
 export const HalfCircleVisualizer = () => {
-  const { bpm, isPlaying } = useMetronomeScheduler();
+  const { isPlaying, getProgress } = useMetronomeScheduler();
   const [{ angle }, dispatch] = useProgressReducer();
   const rafRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+  const lastProgressRef = useRef(0);
 
   const { x, y } = getPointOnArc(angle);
 
@@ -27,22 +27,16 @@ export const HalfCircleVisualizer = () => {
       dispatch({ type: "CLEAR_STATE" });
       return;
     }
-    const durationPerBeat = MILLISECONDS_PER_MINUTE / bpm;
-    let lastTick = performance.now();
 
-    const animate = (now: number) => {
-      const elapsed = now - lastTick;
-      let localProgress = elapsed / durationPerBeat;
-
-      if (localProgress >= 1) {
-        localProgress = 1;
-        dispatch({ type: "TOGGLE_DIRECTION", progress: localProgress });
-        lastTick += durationPerBeat;
-        rafRef.current = requestAnimationFrame(animate);
-        return;
+    const animate = () => {
+      const progress = getProgress();
+      const last = lastProgressRef.current;
+      if (progress < last) {
+        dispatch({ type: "TOGGLE_DIRECTION", progress });
+      } else {
+        dispatch({ type: "SET_PROGRESS", progress });
       }
-
-      dispatch({ type: "SET_PROGRESS", progress: localProgress });
+      lastProgressRef.current = progress;
       rafRef.current = requestAnimationFrame(animate);
     };
 
@@ -52,8 +46,9 @@ export const HalfCircleVisualizer = () => {
         dispatch({ type: "CLEAR_STATE" });
         cancelAnimationFrame(rafRef.current);
       }
+      lastProgressRef.current = 0;
     };
-  }, [bpm, isPlaying, dispatch]);
+  }, [isPlaying, getProgress, dispatch]);
 
   return (
     <div className={styles.halfCircleVisualizer}>

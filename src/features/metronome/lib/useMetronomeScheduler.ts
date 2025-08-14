@@ -126,18 +126,22 @@ export const useMetronomeScheduler = () => {
     dispatch({ type: "STOP" });
   }, []);
 
-  const setBPM = useCallback(
-    (bpm: number) => {
-      if (metronomeState.isPlaying) {
-        stopMetronome();
-        dispatch({ type: "SET_BPM", bpm });
-        startMetronome();
-      } else {
-        dispatch({ type: "SET_BPM", bpm });
-      }
-    },
-    [startMetronome, stopMetronome]
-  );
+  const setBPM = useCallback((bpm: number) => {
+    // Smoothly update BPM without stopping. If playing, adjust the nextNoteTime
+    // so the next tick aligns to the new interval measured from the last tick.
+    const wasPlaying = metronomeState.isPlaying;
+    const oldBpm = metronomeState.bpm;
+
+    dispatch({ type: "SET_BPM", bpm });
+
+    if (wasPlaying) {
+      const oldInterval = calculateIntervalByBPM(oldBpm);
+      const newInterval = calculateIntervalByBPM(bpm);
+      // nextNoteTime was previously lastNoteTime + oldInterval. Move it to
+      // lastNoteTime + newInterval for a natural tempo change.
+      nextNoteTime = nextNoteTime - oldInterval + newInterval;
+    }
+  }, []);
 
   const setVolume = useCallback((volume: number) => {
     dispatch({ type: "SET_VOLUME", volume });
@@ -151,6 +155,19 @@ export const useMetronomeScheduler = () => {
     dispatch({ type: "TOGGLE_ACCENT_ENABLED" });
   }, []);
 
+  // Returns progress of the current beat in [0, 1]
+  const getProgress = useCallback(() => {
+    if (!metronomeState.isPlaying) return 0;
+    const interval = calculateIntervalByBPM(metronomeState.bpm);
+    const lastNoteTime = nextNoteTime - interval;
+    const now = audioContext.currentTime;
+    const raw = (now - lastNoteTime) / interval;
+    // Clamp to [0,1]
+    if (raw < 0) return 0;
+    if (raw > 1) return 1;
+    return raw;
+  }, []);
+
   return {
     ...useSyncExternalStore(subscribe, getSnapshot),
     startMetronome,
@@ -159,5 +176,6 @@ export const useMetronomeScheduler = () => {
     setVolume,
     setBeatsPerMeasure,
     toggleAccentEnabled,
+    getProgress,
   };
 };
