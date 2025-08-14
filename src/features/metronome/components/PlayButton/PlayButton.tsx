@@ -19,9 +19,21 @@ export const PlayButton = () => {
 
   useKeyControl(SPACEBAR_KEY, toggleMetronome);
 
+  const preventSpaceKeyToggle = (
+    event: React.KeyboardEvent<HTMLButtonElement>
+  ) => {
+    if (event.key === SPACEBAR_KEY) {
+      event.preventDefault();
+    }
+  };
+
   if (focusedFeature === "metronome") {
     return (
-      <button className={styles.metronomeController} onClick={toggleMetronome}>
+      <button
+        className={styles.metronomeController}
+        onClick={toggleMetronome}
+        onKeyDown={preventSpaceKeyToggle}
+      >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
         {isPlaying ? "Pause" : "Play"}
       </button>
