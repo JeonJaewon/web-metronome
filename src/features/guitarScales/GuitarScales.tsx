@@ -2,6 +2,7 @@ import { useFeatureContext } from "@/contexts/featureContext";
 import { GuitarFretboard } from "@/features/guitarScales/components/GuitarFretboard";
 import {
   getScaleNotes,
+  GuitarScale,
   GuitarScaleType,
   isGuitarScaleType,
   isNote,
@@ -14,8 +15,9 @@ import { useState } from "react";
 export const GuitarScales = () => {
   const { focusedFeature } = useFeatureContext();
   const [rootNote, setRootNote] = useState<Note>("C");
-  const [scaleType, setScaleType] =
-    useState<GuitarScaleType>("majorPentatonic");
+  const [scaleType, setScaleType] = useState<GuitarScaleType>(
+    GuitarScale.MajorPentatonic
+  );
 
   if (focusedFeature !== "guitarScales") {
     return null;
@@ -50,8 +52,8 @@ export const GuitarScales = () => {
   );
 };
 
-const scaleTypeOptions = [
-  { value: "majorPentatonic", label: "Major Pentatonic" },
-  { value: "minorPentatonic", label: "Minor Pentatonic" },
-  { value: "major", label: "Major Scale" },
+const scaleTypeOptions: { value: GuitarScaleType; label: string }[] = [
+  { value: GuitarScale.MajorPentatonic, label: "Major Pentatonic" },
+  { value: GuitarScale.MinorPentatonic, label: "Minor Pentatonic" },
+  { value: GuitarScale.Major, label: "Major Scale" },
 ];
