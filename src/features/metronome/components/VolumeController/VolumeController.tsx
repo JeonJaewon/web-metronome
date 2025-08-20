@@ -2,6 +2,7 @@ import * as styles from "@/features/metronome/components/VolumeController/Volume
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
 import { Box, Flex, Slider } from "@mantine/core";
+import { motion } from "motion/react";
 import { useState } from "react";
 
 const MIN_VOLUME_LEVEL = 0;
@@ -37,25 +38,31 @@ export function VolumeController() {
   };
 
   return (
-    <div
+    <motion.div
       className={styles.volumeController}
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
+      animate={
+        hovered ? { width: "140px", paddingRight: "24px" } : { width: "50px" }
+      }
+      transition={{ duration: 0.3 }}
     >
       <VolumeIcon />
-      <Box w="100%" onKeyDown={preventHorizontalArrowKeyPropagation}>
-        <Slider
-          ml="10px"
-          className={hovered ? styles.sliderVisible : styles.sliderHidden}
-          value={volume}
-          min={MIN_VOLUME_LEVEL}
-          max={MAX_VOLUME_LEVEL}
-          step={VOLUME_INPUT_STEP}
-          onChange={(value) => setVolume(value)}
-          label={(value) => `${getVolumePercentage(value)}%`}
-        />
-      </Box>
-    </div>
+      {hovered && (
+        <Box w="100%" onKeyDown={preventHorizontalArrowKeyPropagation}>
+          <Slider
+            size="sm"
+            ml="10px"
+            value={volume}
+            min={MIN_VOLUME_LEVEL}
+            max={MAX_VOLUME_LEVEL}
+            step={VOLUME_INPUT_STEP}
+            onChange={(value) => setVolume(value)}
+            label={(value) => `${getVolumePercentage(value)}%`}
+          />
+        </Box>
+      )}
+    </motion.div>
   );
 }
 
