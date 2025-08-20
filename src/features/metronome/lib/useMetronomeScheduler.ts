@@ -127,8 +127,6 @@ export const useMetronomeScheduler = () => {
   }, []);
 
   const setBPM = useCallback((bpm: number) => {
-    // Smoothly update BPM without stopping. If playing, adjust the nextNoteTime
-    // so the next tick aligns to the new interval measured from the last tick.
     const wasPlaying = metronomeState.isPlaying;
     const oldBpm = metronomeState.bpm;
 
