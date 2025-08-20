@@ -24,7 +24,7 @@ export const isGuitarScaleType = (value: unknown): value is GuitarScaleType => {
   return (
     value === "majorPentatonic" ||
     value === "minorPentatonic" ||
-    value === "majorScale"
+    value === "major"
   );
 };
 
