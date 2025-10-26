@@ -7,7 +7,7 @@ export const Stopwatch = () => {
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    let interval: number | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
 
     if (isPlaying) {
       interval = setInterval(() => {
