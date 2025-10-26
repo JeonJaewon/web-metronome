@@ -7,7 +7,7 @@ export const Stopwatch = () => {
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let interval: number | null = null;
 
     if (isPlaying) {
       interval = setInterval(() => {
