@@ -96,12 +96,14 @@ export const useMetronomeScheduler = () => {
 
       const isAccented =
         metronomeState.accentedBeatEnabled && metronomeState.currentBeat === 1;
-      const oscillator = createOscillatorWithConfig(
-        metronomeState.volume,
-        isAccented
-      );
-      oscillator.start(nextNoteTime);
       const NOTE_DURATION = 0.08;
+      const oscillator = createOscillatorWithConfig({
+        volume: metronomeState.volume,
+        isAccentedBeat: isAccented,
+        startTime: nextNoteTime,
+        duration: NOTE_DURATION,
+      });
+      oscillator.start(nextNoteTime);
       oscillator.stop(nextNoteTime + NOTE_DURATION);
       nextNoteTime = nextNoteTime + calculateIntervalByBPM(metronomeState.bpm);
       break;
