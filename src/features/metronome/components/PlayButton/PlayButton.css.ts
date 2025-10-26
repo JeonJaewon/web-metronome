@@ -11,6 +11,6 @@ export const metronomeController = style({
 });
 
 export const unfocusedPlayButton = style({
-  width: "80%",
+  width: "100%",
   margin: "20px auto 0 auto",
 });

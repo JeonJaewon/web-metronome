@@ -1,7 +1,7 @@
 import { style } from "@vanilla-extract/css";
 
 export const wrapper = style({
-  maxWidth: "600px",
+  maxWidth: "400px",
   padding: "80px 20px 0px 20px",
   width: "100%",
   margin: "0 auto",
@@ -16,7 +16,7 @@ export const active = style({
 });
 
 export const inactive = style({
-  paddingBottom: "0px",
+  padding: "80px 0px 0px 0px",
 });
 
 export const rhythmSection = style({

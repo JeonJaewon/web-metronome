@@ -42,5 +42,5 @@ export const visualizerContainer = style({
   marginTop: "24px",
   display: "flex",
   justifyContent: "center",
-  height: "200px",
+  height: "180px",
 });

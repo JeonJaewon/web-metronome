@@ -1,8 +1,7 @@
-
 import { style, globalStyle } from "@vanilla-extract/css";
 
 export const halfCircleVisualizer = style({
-  marginBottom: "20px",
+  marginBottom: "0px",
 });
 
 globalStyle(`${halfCircleVisualizer}`, {
