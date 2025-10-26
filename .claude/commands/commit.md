@@ -9,21 +9,25 @@ Follow these steps:
 1. **Investigate Changes**: Run `git status`, `git diff`, `git diff --staged`, and `git log -5 --oneline` in parallel
 
 2. **Analyze and Plan Commits**:
+
    - Group related changes into logical, atomic commits
    - Follow the existing commit message style
    - Write clear, concise commit messages
 
 3. **Present the Plan** (use concise format):
-   ```
-   Proposed commits:
-   1. <commit message>
-      Files: <file1>, <file2>, ...
 
-   2. <commit message>
-      Files: <file1>, <file2>, ...
+   ```
+   # Proposed Commits
+
+   ## Commit 1: <commit message>
+   - Files: <file1>, <file2>, ...
+
+   ## Commit 2: <commit message>
+   - Files: <file1>, <file2>, ...
    ```
 
 4. **Ask for Confirmation**: Use AskUserQuestion tool with options:
+
    - "Yes, proceed"
    - "No, let me modify"
 
