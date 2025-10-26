@@ -27,7 +27,8 @@ export const GuitarScales = () => {
 
   return (
     <div>
-      <Flex justify="center" gap="xl" mb={24}>
+      <GuitarFretboard markedNotes={markedNotes} rootNote={rootNote} />
+      <Flex justify="center" gap="xl">
         <Select
           label="Scale Type"
           data={scaleTypeOptions}
@@ -35,7 +36,7 @@ export const GuitarScales = () => {
           onChange={(value) => {
             if (isGuitarScaleType(value)) setScaleType(value);
           }}
-          style={{ minWidth: 180 }}
+          style={{ minWidth: 180, marginTop: 40 }}
         />
         <Select
           label="Scale Root"
@@ -44,10 +45,9 @@ export const GuitarScales = () => {
           onChange={(value) => {
             if (isNote(value)) setRootNote(value);
           }}
-          style={{ minWidth: 180 }}
+          style={{ minWidth: 180, marginTop: 40 }}
         />
       </Flex>
-      <GuitarFretboard markedNotes={markedNotes} />
     </div>
   );
 };

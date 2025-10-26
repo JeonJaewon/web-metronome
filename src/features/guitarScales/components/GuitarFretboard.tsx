@@ -15,9 +15,10 @@ function getNote(openNote: OpenNote, fret: number) {
 
 export interface GuitarFretboardProps {
   markedNotes: string[];
+  rootNote: string;
 }
 
-export const GuitarFretboard = ({ markedNotes }: GuitarFretboardProps) => {
+export const GuitarFretboard = ({ markedNotes, rootNote }: GuitarFretboardProps) => {
   return (
     <div className={styles.fretboard}>
       {Array.from({ length: STRING_COUNT }).map((_, stringIdx) => {
@@ -34,7 +35,8 @@ export const GuitarFretboard = ({ markedNotes }: GuitarFretboardProps) => {
             {Array.from({ length: FRETBOARD_SIZE }).map((_, fretIdx) => {
               const note = getNote(openNote, fretIdx + 1);
               const isMarked = markedNotes.includes(note);
-              return <FretCell isMarked={isMarked} stringIndex={stringIdx} />;
+              const isRoot = note === rootNote;
+              return <FretCell isMarked={isMarked} isRoot={isRoot} stringIndex={stringIdx} />;
             })}
           </div>
         );

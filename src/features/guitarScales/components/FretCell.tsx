@@ -3,10 +3,11 @@ import clsx from "clsx";
 
 interface FretCellProps {
   isMarked: boolean;
+  isRoot: boolean;
   stringIndex: number;
 }
 
-export const FretCell = ({ isMarked, stringIndex }: FretCellProps) => {
+export const FretCell = ({ isMarked, isRoot, stringIndex }: FretCellProps) => {
   return (
     <div
       className={clsx(
@@ -15,7 +16,7 @@ export const FretCell = ({ isMarked, stringIndex }: FretCellProps) => {
         stringIndex === 5 && styles.sixthString
       )}
     >
-      {isMarked && <div className={styles.circle} />}
+      {isMarked && <div className={clsx(styles.circle, isRoot && styles.rootCircle)} />}
     </div>
   );
 };

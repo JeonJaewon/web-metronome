@@ -66,3 +66,7 @@ export const circle = style({
   alignItems: "center",
   justifyContent: "center",
 });
+
+export const rootCircle = style({
+  backgroundColor: "dodgerblue",
+});
