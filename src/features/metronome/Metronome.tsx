@@ -8,6 +8,7 @@ import { Stopwatch } from "@/features/metronome/components/Stopwatch/Stopwatch";
 import { VisualizerSwitch } from "@/features/metronome/components/VisualizerSwitch/VisualizerSwitch";
 import { VolumeController } from "@/features/metronome/components/VolumeController/VolumeController";
 import { Flex } from "@mantine/core";
+import clsx from "clsx";
 import { AnimatePresence, motion, TargetAndTransition } from "motion/react";
 import { useRef } from "react";
 
@@ -28,7 +29,10 @@ export const Metronome = () => {
   return (
     <motion.div
       ref={ref}
-      className={styles.wrapper}
+      className={clsx(
+        styles.wrapper,
+        focusedFeature === "metronome" ? styles.active : styles.inactive
+      )}
       animate={metronomeAnimationProps}
     >
       <AnimatePresence>

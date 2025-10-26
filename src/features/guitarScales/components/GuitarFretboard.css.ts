@@ -4,7 +4,7 @@ import { style } from "@vanilla-extract/css";
 export const fretboard = style({
   display: "grid",
   width: "80%",
-  margin: "100px auto 0 auto",
+  margin: "20px auto 0 auto",
   justifyContent: "center",
   gridTemplateRows: `repeat(${STRING_COUNT}, 1fr)`,
 });

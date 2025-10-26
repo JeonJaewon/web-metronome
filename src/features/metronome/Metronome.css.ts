@@ -2,13 +2,21 @@ import { style } from "@vanilla-extract/css";
 
 export const wrapper = style({
   maxWidth: "600px",
-  padding: "80px 20px 20px 20px",
+  padding: "80px 20px 0px 20px",
   width: "100%",
   margin: "0 auto",
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
+});
+
+export const active = style({
+  paddingBottom: "140px",
+});
+
+export const inactive = style({
+  paddingBottom: "0px",
 });
 
 export const rhythmSection = style({
