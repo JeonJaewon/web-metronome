@@ -6,12 +6,11 @@ You are helping to create well-organized git commits from the current changes.
 
 Follow these steps:
 
-1. **Investigate Changes**: Run `git status`, `git diff`, `git diff --staged`, and `git log -5 --oneline` in parallel
+1. **Investigate Changes**: Run `git status`, `git diff`, `git log -5 --oneline` in parallel
 
 2. **Analyze and Plan Commits**:
 
    - Group related changes into logical, atomic commits
-   - Follow the existing commit message style
    - Write clear, concise commit messages
 
 3. **Present the Plan** (use concise format):
@@ -39,6 +38,4 @@ Follow these steps:
 
 - NEVER commit without user approval
 - NEVER use `git commit -a` or `git add .` - be specific about files
-- Follow the git commit safety protocol from your instructions
-- If there are no changes to commit, inform the user
 - Do NOT push to remote unless explicitly asked
