@@ -94,3 +94,11 @@ The metronome achieves high timing accuracy by:
 ### Feature Visibility
 
 Components conditionally render based on `focusedFeature` from `useFeatureContext()`. The Metronome component shows a simplified view when not focused (only BPM and play button) and full controls when focused.
+
+## Git Commit Guidelines
+
+When creating git commits:
+- **DO NOT** include "Generated with Claude Code" or similar AI attribution in commit messages
+- **DO NOT** add "Co-Authored-By: Claude" footers
+- Write clean, professional commit messages that focus on the actual changes
+- Follow the existing commit message style in the repository

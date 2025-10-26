@@ -6,46 +6,33 @@ You are helping to create well-organized git commits from the current changes.
 
 Follow these steps:
 
-1. **Investigate Changes**:
-   - Run `git status` to see all changed, staged, and untracked files
-   - Run `git diff` to see unstaged changes
-   - Run `git diff --staged` to see staged changes
-   - Run `git log -5 --oneline` to see recent commit style
+1. **Investigate Changes**: Run `git status`, `git diff`, `git diff --staged`, and `git log -5 --oneline` in parallel
 
 2. **Analyze and Plan Commits**:
    - Group related changes into logical, atomic commits
-   - Each commit should represent a single logical change (e.g., "Add feature X", "Fix bug Y", "Refactor Z")
-   - Consider separating:
-     - New features
-     - Bug fixes
-     - Refactoring
-     - Documentation changes
-     - Configuration changes
-     - Dependency updates
-   - Follow the existing commit message style from the git log
-   - Write clear, concise commit messages that explain WHY, not just WHAT
+   - Follow the existing commit message style
+   - Write clear, concise commit messages
 
-3. **Present the Plan**:
-   - Show the user a numbered list of proposed commits
-   - For each commit, list:
-     - The commit message
-     - The files to be included
-     - A brief explanation of the changes
-   - Format it clearly so the user can review
+3. **Present the Plan** (use concise format):
+   ```
+   Proposed commits:
+   1. <commit message>
+      Files: <file1>, <file2>, ...
 
-4. **Ask for Confirmation**:
-   - Use the AskUserQuestion tool to ask if the user approves the commit plan
-   - Options should be:
-     - "Yes, proceed with these commits"
-     - "No, let me modify the plan"
+   2. <commit message>
+      Files: <file1>, <file2>, ...
+   ```
+
+4. **Ask for Confirmation**: Use AskUserQuestion tool with options:
+   - "Yes, proceed"
+   - "No, let me modify"
 
 5. **Execute Commits** (only if approved):
-   - For each planned commit:
-     - Stage only the relevant files using `git add`
-     - Create the commit with the proposed message
-   - After all commits are done, show `git log` to confirm success
+   - Stage files and create commits
+   - Show final `git log --oneline -n <number_of_commits>` to confirm
 
 **Important Rules**:
+
 - NEVER commit without user approval
 - NEVER use `git commit -a` or `git add .` - be specific about files
 - Follow the git commit safety protocol from your instructions
