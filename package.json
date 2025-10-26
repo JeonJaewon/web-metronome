@@ -14,6 +14,7 @@
     "free metronome"
   ],
   "type": "module",
+  "packageManager": "pnpm@10.19.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
