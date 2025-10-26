@@ -31,7 +31,6 @@ export const PlayButton = () => {
     return (
       <button
         className={styles.metronomeController}
-        onClick={toggleMetronome}
         onKeyDown={preventSpaceKeyToggle}
       >
         {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -41,7 +40,11 @@ export const PlayButton = () => {
   }
 
   return (
-    <button className={styles.unfocusedPlayButton}>
+    <button
+      className={styles.unfocusedPlayButton}
+      onClick={toggleMetronome}
+      onKeyDown={preventSpaceKeyToggle}
+    >
       {isPlaying ? <PauseIcon /> : <PlayIcon />}
     </button>
   );

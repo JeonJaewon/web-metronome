@@ -20,10 +20,21 @@ export function BPMController() {
   });
 
   return (
-    <Box w="80%" m="0 auto">
+    <Box w="100%" m="0 auto">
       <Text fw={700} size="34px">
         {bpm} BPM
       </Text>
+      {focusedFeature === "metronome" && (
+        <Slider
+          mt="xl"
+          value={bpm}
+          min={MIN_BPM}
+          max={MAX_BPM}
+          step={1}
+          onChange={(value) => setBPM(value)}
+          label={(value) => `${value} BPM`}
+        />
+      )}
       <Flex
         mt={focusedFeature === "metronome" ? "12px" : "-30px"}
         justify="space-between"
@@ -58,17 +69,6 @@ export function BPMController() {
           </button>
         </div>
       </Flex>
-      {focusedFeature === "metronome" && (
-        <Slider
-          mt="md"
-          value={bpm}
-          min={MIN_BPM}
-          max={MAX_BPM}
-          step={1}
-          onChange={(value) => setBPM(value)}
-          label={(value) => `${value} BPM`}
-        />
-      )}
     </Box>
   );
 }
