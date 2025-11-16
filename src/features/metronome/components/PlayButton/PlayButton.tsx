@@ -30,6 +30,7 @@ export const PlayButton = () => {
   if (focusedFeature === "metronome") {
     return (
       <button
+        onClick={toggleMetronome}
         className={styles.metronomeController}
         onKeyDown={preventSpaceKeyToggle}
       >
