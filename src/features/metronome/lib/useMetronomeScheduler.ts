@@ -128,6 +128,26 @@ export const useMetronomeScheduler = () => {
     dispatch({ type: "STOP" });
   }, []);
 
+  const toggleMetronome = useCallback(() => {
+    if (metronomeState.isPlaying) {
+      if (nextNoteTimer !== undefined) clearTimeout(nextNoteTimer);
+      dispatch({ type: "STOP" });
+    } else {
+      dispatch({ type: "START" });
+      nextNoteTime = audioContext.currentTime;
+      scheduleNextNote();
+    }
+  }, [scheduleNextNote]);
+
+  const restartMetronome = useCallback(() => {
+    if (!metronomeState.isPlaying) return;
+    if (nextNoteTimer !== undefined) clearTimeout(nextNoteTimer);
+    dispatch({ type: "STOP" });
+    dispatch({ type: "START" });
+    nextNoteTime = audioContext.currentTime;
+    scheduleNextNote();
+  }, [scheduleNextNote]);
+
   const setBPM = useCallback((bpm: number) => {
     const wasPlaying = metronomeState.isPlaying;
     const oldBpm = metronomeState.bpm;
@@ -172,6 +192,8 @@ export const useMetronomeScheduler = () => {
     ...useSyncExternalStore(subscribe, getSnapshot),
     startMetronome,
     stopMetronome,
+    toggleMetronome,
+    restartMetronome,
     setBPM,
     setVolume,
     setBeatsPerMeasure,

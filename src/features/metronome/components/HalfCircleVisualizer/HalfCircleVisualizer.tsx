@@ -1,26 +1,25 @@
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useEffect, useRef } from "react";
-import { useProgressReducer } from "@/features/metronome/components/HalfCircleVisualizer/useProgressReducer";
 import * as styles from "@/features/metronome/components/HalfCircleVisualizer/HalfCircleVisualizer.css";
+import { useProgressReducer } from "@/features/metronome/components/HalfCircleVisualizer/useProgressReducer";
+import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { vars } from "@/features/metronome/theme.css";
 
-const RADIUS = 100;
-const CENTER = 120;
+const SWEEP_DEG = 75;
 
-function getPointOnArc(angleDeg: number): { x: number; y: number } {
-  const angleRad = (Math.PI * angleDeg) / 180;
-  return {
-    x: CENTER + RADIUS * Math.cos(angleRad),
-    y: CENTER - RADIUS * Math.sin(angleRad),
-  };
-}
+type Props = {
+  height?: number;
+};
 
-export const HalfCircleVisualizer = () => {
+const armAngleFromProgressAngle = (progressAngle: number, isPlaying: boolean) => {
+  if (!isPlaying) return 0;
+  return ((90 - progressAngle) / 90) * SWEEP_DEG;
+};
+
+export const HalfCircleVisualizer = ({ height = 120 }: Props) => {
   const { isPlaying, getProgress } = useMetronomeScheduler();
   const [{ angle }, dispatch] = useProgressReducer();
   const rafRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
   const lastProgressRef = useRef(0);
-
-  const { x, y } = getPointOnArc(angle);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -50,21 +49,57 @@ export const HalfCircleVisualizer = () => {
     };
   }, [isPlaying, getProgress, dispatch]);
 
+  const W = height * 1.9;
+  const H = height;
+  const cx = W / 2;
+  const cy = H - 8;
+  const r = H - 18;
+  const swing = armAngleFromProgressAngle(angle, isPlaying);
+  const rad = ((swing - 90) * Math.PI) / 180;
+  const dotX = cx + Math.cos(rad) * r;
+  const dotY = cy + Math.sin(rad) * r;
+
+  const tickAngles: number[] = [-SWEEP_DEG, 0, SWEEP_DEG];
+
   return (
-    <div className={styles.halfCircleVisualizer}>
-      <svg width={CENTER * 2} height={CENTER + 20}>
+    <div className={styles.wrap}>
+      <svg width={W} height={H} style={{ overflow: "visible" }}>
         <path
-          d={`
-          M ${getPointOnArc(180).x} ${getPointOnArc(180).y}
-          A ${RADIUS} ${RADIUS} 0 0 1 ${getPointOnArc(0).x} ${
-            getPointOnArc(0).y
-          }
-          `}
+          d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
           fill="none"
-          stroke="#888"
-          strokeWidth="4"
+          stroke={vars.color.hair}
+          strokeWidth="1"
+          strokeDasharray="2 4"
         />
-        <circle cx={x} cy={y} r="10" fill="dodgerblue" />
+        {tickAngles.map((s) => {
+          const a = ((s - 90) * Math.PI) / 180;
+          const x1 = cx + Math.cos(a) * (r - 4);
+          const y1 = cy + Math.sin(a) * (r - 4);
+          const x2 = cx + Math.cos(a) * (r + 4);
+          const y2 = cy + Math.sin(a) * (r + 4);
+          return (
+            <line
+              key={s}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              stroke={vars.color.hair}
+              strokeWidth="1"
+            />
+          );
+        })}
+        <circle cx={cx} cy={cy} r="3" fill={vars.color.ink} opacity="0.4" />
+        <line
+          x1={cx}
+          y1={cy}
+          x2={dotX}
+          y2={dotY}
+          stroke={vars.color.ink}
+          strokeOpacity="0.18"
+          strokeWidth="1"
+        />
+        <circle cx={dotX} cy={dotY} r="9" fill={vars.color.accent} />
       </svg>
     </div>
   );

@@ -1,9 +1,14 @@
-import { style, globalStyle } from "@vanilla-extract/css";
+import { keyframes, style } from "@vanilla-extract/css";
 
-export const halfCircleVisualizer = style({
-  marginBottom: "0px",
+const fadeIn = keyframes({
+  from: { opacity: 0 },
+  to: { opacity: 1 },
 });
 
-globalStyle(`${halfCircleVisualizer}`, {
-  animation: "fadeIn 0.1s ease-in",
+export const wrap = style({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  animation: `${fadeIn} 0.1s ease-in`,
 });

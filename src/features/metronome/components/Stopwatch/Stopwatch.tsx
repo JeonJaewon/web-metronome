@@ -2,33 +2,28 @@ import * as styles from "@/features/metronome/components/Stopwatch/Stopwatch.css
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useEffect, useState } from "react";
 
+const formatTime = (seconds: number) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+};
+
 export const Stopwatch = () => {
   const { isPlaying } = useMetronomeScheduler();
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
-
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
-    } else if (!isPlaying && interval) {
-      clearInterval(interval);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setTime((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(interval);
   }, [isPlaying]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-  };
-
   return (
-    <div className={styles.stopwatch}>Playing Time: {formatTime(time)}</div>
+    <div className={styles.root}>
+      <span className={styles.label}>Elapsed</span>
+      <span className={styles.value}>{formatTime(time)}</span>
+    </div>
   );
 };

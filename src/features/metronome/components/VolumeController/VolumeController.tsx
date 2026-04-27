@@ -1,9 +1,6 @@
 import * as styles from "@/features/metronome/components/VolumeController/VolumeController.css";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
-import { Box, Flex, Slider } from "@mantine/core";
-import { motion } from "motion/react";
-import { useState } from "react";
 
 const MIN_VOLUME_LEVEL = 0;
 const MAX_VOLUME_LEVEL = 0.5;
@@ -11,76 +8,42 @@ const MAX_VOLUME_LEVEL = 0.5;
 const VOLUME_INPUT_STEP = MAX_VOLUME_LEVEL / 100;
 const VOLUME_KEYBOARD_STEP = VOLUME_INPUT_STEP * 5;
 
+const toPercent = (value: number) =>
+  Math.round((value / MAX_VOLUME_LEVEL) * 100);
+
 export function VolumeController() {
   const { volume, setVolume } = useMetronomeScheduler();
-  const [hovered, setHovered] = useState(false);
-
-  const getVolumePercentage = (value: number) => {
-    return Math.round((value / MAX_VOLUME_LEVEL) * 100);
-  };
 
   useKeyControl("ArrowUp", () => {
     setVolume(Math.min(volume + VOLUME_KEYBOARD_STEP, MAX_VOLUME_LEVEL));
-    setHovered(true);
   });
 
   useKeyControl("ArrowDown", () => {
     setVolume(Math.max(volume - VOLUME_KEYBOARD_STEP, MIN_VOLUME_LEVEL));
-    setHovered(true);
   });
 
-  const preventHorizontalArrowKeyPropagation = (
-    event: React.KeyboardEvent<HTMLDivElement>
-  ) => {
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-      event.stopPropagation();
-    }
-  };
+  const frac = volume / MAX_VOLUME_LEVEL;
 
   return (
-    <motion.div
-      className={styles.volumeController}
-      onPointerEnter={() => setHovered(true)}
-      onPointerLeave={() => setHovered(false)}
-      animate={
-        hovered ? { width: "140px", paddingRight: "24px" } : { width: "50px" }
-      }
-      transition={{ duration: 0.3 }}
-    >
-      <VolumeIcon />
-      {hovered && (
-        <Box w="100%" onKeyDown={preventHorizontalArrowKeyPropagation}>
-          <Slider
-            size="sm"
-            ml="10px"
-            value={volume}
-            min={MIN_VOLUME_LEVEL}
-            max={MAX_VOLUME_LEVEL}
-            step={VOLUME_INPUT_STEP}
-            onChange={(value) => setVolume(value)}
-            label={(value) => `${getVolumePercentage(value)}%`}
-          />
-        </Box>
-      )}
-    </motion.div>
+    <div className={styles.root}>
+      <div className={styles.header}>
+        <span className={styles.label}>Volume</span>
+        <span className={styles.label}>{toPercent(volume)}%</span>
+      </div>
+      <div className={styles.slider}>
+        <input
+          type="range"
+          min={MIN_VOLUME_LEVEL}
+          max={MAX_VOLUME_LEVEL}
+          step={VOLUME_INPUT_STEP}
+          value={volume}
+          onChange={(e) => setVolume(Number(e.target.value))}
+          className={styles.range}
+          aria-label="Volume"
+        />
+        <div className={styles.fill} style={{ width: `${frac * 100}%` }} />
+        <div className={styles.thumb} style={{ left: `${frac * 100}%` }} />
+      </div>
+    </div>
   );
 }
-
-const VolumeIcon = () => (
-  <Flex>
-    <svg
-      stroke="currentColor"
-      fill="none"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      height="20px"
-      width="20px"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-    </svg>
-  </Flex>
-);

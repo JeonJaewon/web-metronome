@@ -1,15 +1,14 @@
 import * as styles from "@/features/metronome/components/BPMController/BPMController.css";
-import { useFeatureContext } from "@/contexts/featureContext";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
-import { Box, Flex, Slider, Text } from "@mantine/core";
 
 const MIN_BPM = 40;
 const MAX_BPM = 240;
+const SLIDER_MIN = 40;
+const SLIDER_MAX = 208;
 
 export function BPMController() {
   const { bpm, setBPM } = useMetronomeScheduler();
-  const { focusedFeature } = useFeatureContext();
 
   useKeyControl("ArrowRight", () => {
     setBPM(Math.min(bpm + 1, MAX_BPM));
@@ -19,56 +18,46 @@ export function BPMController() {
     setBPM(Math.max(bpm - 1, MIN_BPM));
   });
 
+  const clamped = Math.max(SLIDER_MIN, Math.min(SLIDER_MAX, bpm));
+  const frac = (clamped - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN);
+
   return (
-    <Box w="100%" m="0 auto">
-      <Text fw={700} size="34px">
-        {bpm} BPM
-      </Text>
-      {focusedFeature === "metronome" && (
-        <Slider
-          mt="xl"
-          value={bpm}
-          min={MIN_BPM}
-          max={MAX_BPM}
+    <div className={styles.root}>
+      <div className={styles.header}>
+        <span className={styles.label}>BPM · 40–208</span>
+        <div className={styles.stepRow}>
+          <button
+            type="button"
+            className={styles.stepBtn}
+            aria-label="Decrease BPM"
+            onClick={() => setBPM(Math.max(bpm - 1, MIN_BPM))}
+          >
+            –
+          </button>
+          <button
+            type="button"
+            className={styles.stepBtn}
+            aria-label="Increase BPM"
+            onClick={() => setBPM(Math.min(bpm + 1, MAX_BPM))}
+          >
+            +
+          </button>
+        </div>
+      </div>
+      <div className={styles.slider}>
+        <input
+          type="range"
+          min={SLIDER_MIN}
+          max={SLIDER_MAX}
           step={1}
-          onChange={(value) => setBPM(value)}
-          label={(value) => `${value} BPM`}
+          value={clamped}
+          onChange={(e) => setBPM(Number(e.target.value))}
+          className={styles.range}
+          aria-label="BPM"
         />
-      )}
-      <Flex
-        mt={focusedFeature === "metronome" ? "12px" : "-30px"}
-        justify="space-between"
-        align="center"
-      >
-        <div className={styles.buttonsContainer}>
-          <button
-            className={styles.bpmAdjustButton}
-            onClick={() => setBPM(bpm - 10)}
-          >
-            -10
-          </button>
-          <button
-            className={styles.bpmAdjustButton}
-            onClick={() => setBPM(bpm - 1)}
-          >
-            -1
-          </button>
-        </div>
-        <div className={styles.buttonsContainer}>
-          <button
-            className={styles.bpmAdjustButton}
-            onClick={() => setBPM(bpm + 1)}
-          >
-            +1
-          </button>
-          <button
-            className={styles.bpmAdjustButton}
-            onClick={() => setBPM(bpm + 10)}
-          >
-            +10
-          </button>
-        </div>
-      </Flex>
-    </Box>
+        <div className={styles.fill} style={{ width: `${frac * 100}%` }} />
+        <div className={styles.thumb} style={{ left: `${frac * 100}%` }} />
+      </div>
+    </div>
   );
 }
