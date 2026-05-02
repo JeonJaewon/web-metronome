@@ -4,6 +4,7 @@ import {
   audioContext,
   createOscillatorWithConfig,
 } from "@/features/metronome/lib/oscillator";
+import { playbackClock } from "@/features/metronome/lib/playbackClock";
 
 let listeners: (() => void)[] = [];
 let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
@@ -116,6 +117,7 @@ export const useMetronomeScheduler = () => {
   const startMetronome = useCallback(() => {
     if (!metronomeState.isPlaying) {
       dispatch({ type: "START" });
+      playbackClock.start();
       nextNoteTime = audioContext.currentTime;
       scheduleNextNote();
     }
@@ -126,14 +128,17 @@ export const useMetronomeScheduler = () => {
       clearTimeout(nextNoteTimer);
     }
     dispatch({ type: "STOP" });
+    playbackClock.stop();
   }, []);
 
   const toggleMetronome = useCallback(() => {
     if (metronomeState.isPlaying) {
       if (nextNoteTimer !== undefined) clearTimeout(nextNoteTimer);
       dispatch({ type: "STOP" });
+      playbackClock.stop();
     } else {
       dispatch({ type: "START" });
+      playbackClock.start();
       nextNoteTime = audioContext.currentTime;
       scheduleNextNote();
     }
@@ -143,7 +148,9 @@ export const useMetronomeScheduler = () => {
     if (!metronomeState.isPlaying) return;
     if (nextNoteTimer !== undefined) clearTimeout(nextNoteTimer);
     dispatch({ type: "STOP" });
+    playbackClock.stop();
     dispatch({ type: "START" });
+    playbackClock.start();
     nextNoteTime = audioContext.currentTime;
     scheduleNextNote();
   }, [scheduleNextNote]);
