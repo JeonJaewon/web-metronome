@@ -2,7 +2,6 @@ import * as styles from "@/features/metronome/components/PulseModule/PulseModule
 import * as toggleStyles from "@/features/metronome/components/PulseModule/PulseModeToggle.css";
 import BeatVisualizer from "@/features/metronome/components/BeatVisualizer/BeatVisualizer";
 import { HalfCircleVisualizer } from "@/features/metronome/components/HalfCircleVisualizer/HalfCircleVisualizer";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -23,14 +22,7 @@ export const PulseModule = ({
   dotSize = 14,
   dotGap = 18,
 }: Props) => {
-  const { restartMetronome } = useMetronomeScheduler();
-  const [mode, setModeState] = useState<PulseMode>("dots");
-
-  const setMode = (next: PulseMode) => {
-    if (next === mode) return;
-    setModeState(next);
-    restartMetronome();
-  };
+  const [mode, setMode] = useState<PulseMode>("dots");
 
   return (
     <div className={clsx(styles.root, styles.sizes[size])}>

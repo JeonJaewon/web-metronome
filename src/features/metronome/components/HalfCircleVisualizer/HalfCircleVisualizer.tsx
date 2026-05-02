@@ -1,6 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import * as styles from "@/features/metronome/components/HalfCircleVisualizer/HalfCircleVisualizer.css";
-import { useProgressReducer } from "@/features/metronome/components/HalfCircleVisualizer/useProgressReducer";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { vars } from "@/features/metronome/theme.css";
 
@@ -15,39 +14,24 @@ const armAngleFromProgressAngle = (progressAngle: number, isPlaying: boolean) =>
   return ((90 - progressAngle) / 90) * SWEEP_DEG;
 };
 
+const angleFromProgress = (progress: number, forward: boolean) =>
+  180 - 180 * (forward ? progress : 1 - progress);
+
 export const HalfCircleVisualizer = ({ height = 120 }: Props) => {
-  const { isPlaying, getProgress } = useMetronomeScheduler();
-  const [{ angle }, dispatch] = useProgressReducer();
-  const rafRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
-  const lastProgressRef = useRef(0);
+  const { isPlaying, totalBeats, getProgress } = useMetronomeScheduler();
+  const [, setTick] = useState(0);
 
   useEffect(() => {
-    if (!isPlaying) {
-      dispatch({ type: "CLEAR_STATE" });
-      return;
-    }
+    if (!isPlaying) return;
+    let raf = requestAnimationFrame(function tick() {
+      setTick((n) => n + 1);
+      raf = requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [isPlaying]);
 
-    const animate = () => {
-      const progress = getProgress();
-      const last = lastProgressRef.current;
-      if (progress < last) {
-        dispatch({ type: "TOGGLE_DIRECTION", progress });
-      } else {
-        dispatch({ type: "SET_PROGRESS", progress });
-      }
-      lastProgressRef.current = progress;
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (rafRef.current) {
-        dispatch({ type: "CLEAR_STATE" });
-        cancelAnimationFrame(rafRef.current);
-      }
-      lastProgressRef.current = 0;
-    };
-  }, [isPlaying, getProgress, dispatch]);
+  const forward = totalBeats % 2 === 1;
+  const angle = isPlaying ? angleFromProgress(getProgress(), forward) : 180;
 
   const W = height * 1.9;
   const H = height;

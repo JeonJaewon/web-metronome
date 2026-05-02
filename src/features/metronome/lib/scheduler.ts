@@ -9,12 +9,13 @@ import { playbackClock } from "@/features/metronome/lib/playbackClock";
 type SchedulerState = {
   isPlaying: boolean;
   currentBeat: number;
+  totalBeats: number;
 };
 
 const NOTE_DURATION = 0.08;
 const SCHEDULE_DELAY_MS = 25;
 
-let state: SchedulerState = { isPlaying: false, currentBeat: 0 };
+let state: SchedulerState = { isPlaying: false, currentBeat: 0, totalBeats: 0 };
 let nextNoteTime = audioContext.currentTime;
 let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
 const listeners = new Set<() => void>();
@@ -43,6 +44,7 @@ const incrementBeat = () => {
   setState({
     ...state,
     currentBeat: nextBeat > beatsPerMeasure ? 1 : nextBeat,
+    totalBeats: state.totalBeats + 1,
   });
 };
 
@@ -72,7 +74,7 @@ const scheduleNextNote = () => {
 
 const start = () => {
   if (state.isPlaying) return;
-  setState({ isPlaying: true, currentBeat: 0 });
+  setState({ isPlaying: true, currentBeat: 0, totalBeats: 0 });
   playbackClock.start();
   nextNoteTime = audioContext.currentTime;
   scheduleNextNote();
