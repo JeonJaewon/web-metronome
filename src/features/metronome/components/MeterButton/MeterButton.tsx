@@ -1,5 +1,5 @@
 import * as styles from "@/features/metronome/components/MeterButton/MeterButton.css";
-import { BEAT_OPTIONS } from "@/features/metronome/lib/bpm";
+import { BEAT_OPTIONS } from "@/features/metronome/lib/beatsPerMeasure";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import clsx from "clsx";
 

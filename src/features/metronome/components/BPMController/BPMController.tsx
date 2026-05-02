@@ -1,36 +1,26 @@
 import * as styles from "@/features/metronome/components/BPMController/BPMController.css";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
-
-const MIN_BPM = 40;
-const MAX_BPM = 240;
-const SLIDER_MIN = 40;
-const SLIDER_MAX = 208;
+import { MAX_BPM, MIN_BPM } from "@/lib/bpm";
 
 export function BPMController() {
   const { bpm, setBPM } = useMetronomeScheduler();
 
-  useKeyControl("ArrowRight", () => {
-    setBPM(Math.min(bpm + 1, MAX_BPM));
-  });
+  useKeyControl("ArrowRight", () => setBPM(bpm + 1));
+  useKeyControl("ArrowLeft", () => setBPM(bpm - 1));
 
-  useKeyControl("ArrowLeft", () => {
-    setBPM(Math.max(bpm - 1, MIN_BPM));
-  });
-
-  const clamped = Math.max(SLIDER_MIN, Math.min(SLIDER_MAX, bpm));
-  const frac = (clamped - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN);
+  const frac = (bpm - MIN_BPM) / (MAX_BPM - MIN_BPM);
 
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        <span className={styles.label}>BPM · 40–208</span>
+        <span className={styles.label}>BPM · {MIN_BPM}–{MAX_BPM}</span>
         <div className={styles.stepRow}>
           <button
             type="button"
             className={styles.stepBtn}
             aria-label="Decrease BPM"
-            onClick={() => setBPM(Math.max(bpm - 1, MIN_BPM))}
+            onClick={() => setBPM(bpm - 1)}
           >
             –
           </button>
@@ -38,7 +28,7 @@ export function BPMController() {
             type="button"
             className={styles.stepBtn}
             aria-label="Increase BPM"
-            onClick={() => setBPM(Math.min(bpm + 1, MAX_BPM))}
+            onClick={() => setBPM(bpm + 1)}
           >
             +
           </button>
@@ -47,10 +37,10 @@ export function BPMController() {
       <div className={styles.slider}>
         <input
           type="range"
-          min={SLIDER_MIN}
-          max={SLIDER_MAX}
+          min={MIN_BPM}
+          max={MAX_BPM}
           step={1}
-          value={clamped}
+          value={bpm}
           onChange={(e) => setBPM(Number(e.target.value))}
           className={styles.range}
           aria-label="BPM"

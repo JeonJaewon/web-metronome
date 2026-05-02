@@ -10,7 +10,7 @@ import { PulseModule } from "@/features/metronome/components/PulseModule/PulseMo
 import { Stopwatch } from "@/features/metronome/components/Stopwatch/Stopwatch";
 import { TapTempoButton } from "@/features/metronome/components/TapTempoButton/TapTempoButton";
 import { VolumeController } from "@/features/metronome/components/VolumeController/VolumeController";
-import { BEAT_OPTIONS } from "@/features/metronome/lib/bpm";
+import { BEAT_OPTIONS } from "@/features/metronome/lib/beatsPerMeasure";
 import { tempoName } from "@/features/metronome/lib/tempoName";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useBreakpoint } from "@/hooks/useBreakpoint";

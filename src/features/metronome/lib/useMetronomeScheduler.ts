@@ -1,9 +1,9 @@
 import { useSyncExternalStore, useCallback } from "react";
+import { clampBpm, secondsPerBeat } from "@/lib/bpm";
 import {
   audioContext,
   createOscillatorWithConfig,
 } from "@/features/metronome/lib/oscillator";
-import { calculateIntervalByBPM } from "@/utils/calculateIntervalByBPM";
 
 let listeners: (() => void)[] = [];
 let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
@@ -105,7 +105,7 @@ export const useMetronomeScheduler = () => {
       });
       oscillator.start(nextNoteTime);
       oscillator.stop(nextNoteTime + NOTE_DURATION);
-      nextNoteTime = nextNoteTime + calculateIntervalByBPM(metronomeState.bpm);
+      nextNoteTime = nextNoteTime + secondsPerBeat(metronomeState.bpm);
       break;
     }
 
@@ -151,12 +151,13 @@ export const useMetronomeScheduler = () => {
   const setBPM = useCallback((bpm: number) => {
     const wasPlaying = metronomeState.isPlaying;
     const oldBpm = metronomeState.bpm;
+    const clamped = clampBpm(bpm);
 
-    dispatch({ type: "SET_BPM", bpm });
+    dispatch({ type: "SET_BPM", bpm: clamped });
 
     if (wasPlaying) {
-      const oldInterval = calculateIntervalByBPM(oldBpm);
-      const newInterval = calculateIntervalByBPM(bpm);
+      const oldInterval = secondsPerBeat(oldBpm);
+      const newInterval = secondsPerBeat(clamped);
       // nextNoteTime was previously lastNoteTime + oldInterval. Move it to
       // lastNoteTime + newInterval for a natural tempo change.
       nextNoteTime = nextNoteTime - oldInterval + newInterval;
@@ -178,7 +179,7 @@ export const useMetronomeScheduler = () => {
   // Returns progress of the current beat in [0, 1]
   const getProgress = useCallback(() => {
     if (!metronomeState.isPlaying) return 0;
-    const interval = calculateIntervalByBPM(metronomeState.bpm);
+    const interval = secondsPerBeat(metronomeState.bpm);
     const lastNoteTime = nextNoteTime - interval;
     const now = audioContext.currentTime;
     const raw = (now - lastNoteTime) / interval;
