@@ -1,211 +1,28 @@
-import { useSyncExternalStore, useCallback } from "react";
-import { clampBpm, secondsPerBeat } from "@/lib/bpm";
-import {
-  audioContext,
-  createOscillatorWithConfig,
-} from "@/features/metronome/lib/oscillator";
-import { playbackClock } from "@/features/metronome/lib/playbackClock";
-
-let listeners: (() => void)[] = [];
-let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
-let nextNoteTime = audioContext.currentTime;
-
-const subscribe = (listener: () => void) => {
-  listeners = [...listeners, listener];
-  return () => {
-    listeners = listeners.filter((l) => l !== listener);
-  };
-};
-
-const notifyListeners = () => {
-  for (const listener of listeners) {
-    listener();
-  }
-};
-
-type MetronomeState = {
-  isPlaying: boolean;
-  bpm: number;
-  volume: number;
-  beatsPerMeasure: number;
-  currentBeat: number;
-  accentedBeatEnabled: boolean;
-};
-
-type MetronomeAction =
-  | { type: "START" }
-  | { type: "STOP" }
-  | { type: "SET_BPM"; bpm: number }
-  | { type: "SET_VOLUME"; volume: number }
-  | { type: "SET_BEATS_PER_MEASURE"; beats: number }
-  | { type: "TOGGLE_ACCENT_ENABLED" }
-  | { type: "INCREMENT_BEAT" };
-
-const initialState: MetronomeState = {
-  isPlaying: false,
-  bpm: 100,
-  volume: 0.5,
-  beatsPerMeasure: 4,
-  currentBeat: 0,
-  accentedBeatEnabled: true,
-};
-
-let metronomeState = initialState;
-
-const metronomeReducer = (
-  state: MetronomeState,
-  action: MetronomeAction
-): MetronomeState => {
-  switch (action.type) {
-    case "START":
-      return { ...state, isPlaying: true, currentBeat: 0 };
-    case "STOP":
-      return { ...state, isPlaying: false };
-    case "SET_BPM":
-      return { ...state, bpm: action.bpm };
-    case "SET_VOLUME":
-      return { ...state, volume: action.volume };
-    case "SET_BEATS_PER_MEASURE":
-      return { ...state, beatsPerMeasure: action.beats, currentBeat: 0 };
-    case "TOGGLE_ACCENT_ENABLED":
-      return { ...state, accentedBeatEnabled: !state.accentedBeatEnabled };
-    case "INCREMENT_BEAT": {
-      const nextBeat = state.currentBeat + 1;
-      return {
-        ...state,
-        currentBeat: nextBeat > state.beatsPerMeasure ? 1 : nextBeat,
-      };
-    }
-    default:
-      return state;
-  }
-};
-
-const dispatch = (action: MetronomeAction) => {
-  metronomeState = metronomeReducer(metronomeState, action);
-  notifyListeners();
-};
-
-const getSnapshot = () => metronomeState;
+import { useSyncExternalStore } from "react";
+import { metronomeSettings } from "@/features/metronome/lib/metronomeSettings";
+import { scheduler } from "@/features/metronome/lib/scheduler";
 
 export const useMetronomeScheduler = () => {
-  const scheduleNextNote = useCallback(() => {
-    if (!metronomeState.isPlaying) return;
-
-    while (nextNoteTime <= audioContext.currentTime) {
-      dispatch({ type: "INCREMENT_BEAT" });
-
-      const isAccented =
-        metronomeState.accentedBeatEnabled && metronomeState.currentBeat === 1;
-      const NOTE_DURATION = 0.08;
-      const oscillator = createOscillatorWithConfig({
-        volume: metronomeState.volume,
-        isAccentedBeat: isAccented,
-        startTime: nextNoteTime,
-        duration: NOTE_DURATION,
-      });
-      oscillator.start(nextNoteTime);
-      oscillator.stop(nextNoteTime + NOTE_DURATION);
-      nextNoteTime = nextNoteTime + secondsPerBeat(metronomeState.bpm);
-      break;
-    }
-
-    const SCHEDULE_DELAY_MS = 25;
-    nextNoteTimer = setTimeout(() => scheduleNextNote(), SCHEDULE_DELAY_MS);
-  }, []);
-
-  const startMetronome = useCallback(() => {
-    if (!metronomeState.isPlaying) {
-      dispatch({ type: "START" });
-      playbackClock.start();
-      nextNoteTime = audioContext.currentTime;
-      scheduleNextNote();
-    }
-  }, [scheduleNextNote]);
-
-  const stopMetronome = useCallback(() => {
-    if (nextNoteTimer !== undefined) {
-      clearTimeout(nextNoteTimer);
-    }
-    dispatch({ type: "STOP" });
-    playbackClock.stop();
-  }, []);
-
-  const toggleMetronome = useCallback(() => {
-    if (metronomeState.isPlaying) {
-      if (nextNoteTimer !== undefined) clearTimeout(nextNoteTimer);
-      dispatch({ type: "STOP" });
-      playbackClock.stop();
-    } else {
-      dispatch({ type: "START" });
-      playbackClock.start();
-      nextNoteTime = audioContext.currentTime;
-      scheduleNextNote();
-    }
-  }, [scheduleNextNote]);
-
-  const restartMetronome = useCallback(() => {
-    if (!metronomeState.isPlaying) return;
-    if (nextNoteTimer !== undefined) clearTimeout(nextNoteTimer);
-    dispatch({ type: "STOP" });
-    playbackClock.stop();
-    dispatch({ type: "START" });
-    playbackClock.start();
-    nextNoteTime = audioContext.currentTime;
-    scheduleNextNote();
-  }, [scheduleNextNote]);
-
-  const setBPM = useCallback((bpm: number) => {
-    const wasPlaying = metronomeState.isPlaying;
-    const oldBpm = metronomeState.bpm;
-    const clamped = clampBpm(bpm);
-
-    dispatch({ type: "SET_BPM", bpm: clamped });
-
-    if (wasPlaying) {
-      const oldInterval = secondsPerBeat(oldBpm);
-      const newInterval = secondsPerBeat(clamped);
-      // nextNoteTime was previously lastNoteTime + oldInterval. Move it to
-      // lastNoteTime + newInterval for a natural tempo change.
-      nextNoteTime = nextNoteTime - oldInterval + newInterval;
-    }
-  }, []);
-
-  const setVolume = useCallback((volume: number) => {
-    dispatch({ type: "SET_VOLUME", volume });
-  }, []);
-
-  const setBeatsPerMeasure = useCallback((beats: number) => {
-    dispatch({ type: "SET_BEATS_PER_MEASURE", beats });
-  }, []);
-
-  const toggleAccentEnabled = useCallback(() => {
-    dispatch({ type: "TOGGLE_ACCENT_ENABLED" });
-  }, []);
-
-  // Returns progress of the current beat in [0, 1]
-  const getProgress = useCallback(() => {
-    if (!metronomeState.isPlaying) return 0;
-    const interval = secondsPerBeat(metronomeState.bpm);
-    const lastNoteTime = nextNoteTime - interval;
-    const now = audioContext.currentTime;
-    const raw = (now - lastNoteTime) / interval;
-    // Clamp to [0,1]
-    if (raw < 0) return 0;
-    if (raw > 1) return 1;
-    return raw;
-  }, []);
+  const settings = useSyncExternalStore(
+    metronomeSettings.subscribe,
+    metronomeSettings.getSnapshot
+  );
+  const playback = useSyncExternalStore(
+    scheduler.subscribe,
+    scheduler.getSnapshot
+  );
 
   return {
-    ...useSyncExternalStore(subscribe, getSnapshot),
-    startMetronome,
-    stopMetronome,
-    toggleMetronome,
-    restartMetronome,
-    setBPM,
-    setVolume,
-    setBeatsPerMeasure,
-    toggleAccentEnabled,
-    getProgress,
+    ...settings,
+    ...playback,
+    startMetronome: scheduler.start,
+    stopMetronome: scheduler.stop,
+    toggleMetronome: scheduler.toggle,
+    restartMetronome: scheduler.restart,
+    setBPM: metronomeSettings.setBPM,
+    setVolume: metronomeSettings.setVolume,
+    setBeatsPerMeasure: metronomeSettings.setBeatsPerMeasure,
+    toggleAccentEnabled: metronomeSettings.toggleAccentEnabled,
+    getProgress: scheduler.getProgress,
   };
 };
