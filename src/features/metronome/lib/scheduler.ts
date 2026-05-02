@@ -100,12 +100,6 @@ const toggle = () => {
   else start();
 };
 
-const restart = () => {
-  if (!state.isPlaying) return;
-  stop();
-  start();
-};
-
 const getProgress = () => {
   if (!state.isPlaying) return 0;
   const interval = secondsPerBeat(metronomeSettings.getSnapshot().bpm);
@@ -123,7 +117,6 @@ export const scheduler = {
   start,
   stop,
   toggle,
-  restart,
   getProgress,
 };
 

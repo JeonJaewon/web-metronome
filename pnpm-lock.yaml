@@ -17,9 +17,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      dogu-utils:
-        specifier: ^0.0.8
-        version: 0.0.8(react@19.1.0)
       immer:
         specifier: ^10.1.1
         version: 10.1.1
@@ -849,11 +846,6 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
-
-  dogu-utils@0.0.8:
-    resolution: {integrity: sha512-YL0OKzuR5SAXGJXrA6Cm+Q6RG3KDuSi7nrGeFWVMJiOAdCYpBrrubjcOh8sZwcz4sDU4f0cugCZevF5zUhDAQQ==}
-    peerDependencies:
-      react: ^18.2.0
 
   electron-to-chromium@1.5.176:
     resolution: {integrity: sha512-2nDK9orkm7M9ZZkjO3PjbEd3VUulQLyg5T9O3enJdFvUg46Hzd4DUvTvAuEgbdHYXyFsiG4A5sO9IzToMH1cDg==}
@@ -2319,10 +2311,6 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
-
-  dogu-utils@0.0.8(react@19.1.0):
-    dependencies:
-      react: 19.1.0
 
   electron-to-chromium@1.5.176: {}
 
