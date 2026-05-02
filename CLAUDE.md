@@ -45,7 +45,7 @@ The app is organized around two main features accessible via tabs:
 - **Metronome**: Primary feature with BPM control, beat visualization, volume control, and stopwatch
 - **Guitar Scales**: Secondary feature with guitar fretboard visualization for practicing scales
 
-Features are controlled via `featureContext.ts` which manages which feature is currently focused. The focused feature determines visibility and animations.
+Features are controlled via `src/app/feature.ts`, a module-level store with a `useFocusedFeature` hook. The focused feature determines visibility and animations.
 
 ### Web Audio API Integration
 
@@ -64,8 +64,7 @@ Audio timing is critical for metronome accuracy. The implementation uses:
 
 ### State Management
 
-- **External Store Pattern**: The metronome uses `useSyncExternalStore` with a global state object (`metronomeState`) managed outside React's render cycle for precise timing
-- **Context API**: Feature selection uses React Context (`featureContext.ts`) via `dogu-utils`'s `createSafeContext`
+- **External Store Pattern**: Settings, scheduler, playback clock, and feature focus all use `useSyncExternalStore` over module-level state managed outside React's render cycle
 
 ### Styling
 

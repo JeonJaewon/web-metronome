@@ -1,5 +1,5 @@
+import { useFocusedFeature } from "@/app/feature";
 import { ModeSwitcher } from "@/components/ModeSwitcher/ModeSwitcher";
-import { useFeatureContext } from "@/contexts/featureContext";
 import * as styles from "@/features/guitarScales/GuitarScales.css";
 import { Fretboard } from "@/features/guitarScales/components/Fretboard/Fretboard";
 import { LabelToggle } from "@/features/guitarScales/components/LabelToggle/LabelToggle";
@@ -28,7 +28,7 @@ type State = {
 };
 
 export const GuitarScales = () => {
-  const { focusedFeature } = useFeatureContext();
+  const focusedFeature = useFocusedFeature();
   const breakpoint = useBreakpoint();
   const [state, setState] = useState<State>({
     rootNote: "A",

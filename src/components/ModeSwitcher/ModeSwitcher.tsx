@@ -1,5 +1,5 @@
+import { Feature, featureStore, useFocusedFeature } from "@/app/feature";
 import * as styles from "@/components/ModeSwitcher/ModeSwitcher.css";
-import { useFeatureContext, Feature } from "@/contexts/featureContext";
 import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useDismiss } from "@/hooks/useDismiss";
 import clsx from "clsx";
@@ -19,7 +19,7 @@ const MODES: { key: Feature; label: string; Icon: () => ReactElement }[] = [
 ];
 
 export const ModeSwitcher = ({ size = "md" }: Props) => {
-  const { focusedFeature, setFocusedFeature } = useFeatureContext();
+  const focusedFeature = useFocusedFeature();
   const { isPlaying } = useMetronomeScheduler();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -73,7 +73,7 @@ export const ModeSwitcher = ({ size = "md" }: Props) => {
                 role="menuitemradio"
                 aria-checked={active}
                 onClick={() => {
-                  setFocusedFeature(key);
+                  featureStore.setFocusedFeature(key);
                   setOpen(false);
                 }}
                 className={clsx(styles.item, active && styles.itemActive)}

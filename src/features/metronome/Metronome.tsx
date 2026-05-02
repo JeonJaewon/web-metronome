@@ -1,5 +1,5 @@
+import { useFocusedFeature } from "@/app/feature";
 import { ModeSwitcher } from "@/components/ModeSwitcher/ModeSwitcher";
-import { useFeatureContext } from "@/contexts/featureContext";
 import * as styles from "@/features/metronome/Metronome.css";
 import { AccentToggleController } from "@/features/metronome/components/AccentToggleController/AccentToggleController";
 import { BPMController } from "@/features/metronome/components/BPMController/BPMController";
@@ -17,7 +17,7 @@ import { useBreakpoint } from "@/hooks/useBreakpoint";
 import clsx from "clsx";
 
 export const Metronome = () => {
-  const { focusedFeature } = useFeatureContext();
+  const focusedFeature = useFocusedFeature();
   const breakpoint = useBreakpoint();
 
   if (focusedFeature !== "metronome") return null;
