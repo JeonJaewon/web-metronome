@@ -16,7 +16,7 @@ import {
   pitchClassToNote,
   Scale,
 } from "@/features/guitarScales/scale";
-import { vars } from "@/features/metronome/theme.css";
+import { vars } from "@/styles/theme.css";
 import { useEffect, useRef, useState } from "react";
 
 const PAD_LEFT = 36;

@@ -5,7 +5,7 @@ import {
   useIsPlaying,
   useTotalBeats,
 } from "@/features/metronome/lib/scheduler";
-import { vars } from "@/features/metronome/theme.css";
+import { vars } from "@/styles/theme.css";
 
 const SWEEP_DEG = 75;
 

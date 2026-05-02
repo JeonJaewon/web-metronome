@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { vars, breakpoints } from "@/features/metronome/theme.css";
+import { vars, breakpoints } from "@/styles/theme.css";
 
 export const wrapper = style({
   width: "100%",
