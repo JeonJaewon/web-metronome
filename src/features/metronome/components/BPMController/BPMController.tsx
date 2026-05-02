@@ -1,16 +1,14 @@
 import * as styles from "@/features/metronome/components/BPMController/BPMController.css";
+import { useBpmKeyControl } from "@/features/metronome/lib/keyboardControls";
 import {
   metronomeSettings,
   useBPM,
 } from "@/features/metronome/lib/metronomeSettings";
-import { useKeyControl } from "@/hooks/useKeyControl";
 import { MAX_BPM, MIN_BPM } from "@/lib/bpm";
 
 export function BPMController() {
   const bpm = useBPM();
-
-  useKeyControl("ArrowRight", () => metronomeSettings.setBPM(bpm + 1));
-  useKeyControl("ArrowLeft", () => metronomeSettings.setBPM(bpm - 1));
+  useBpmKeyControl();
 
   const frac = (bpm - MIN_BPM) / (MAX_BPM - MIN_BPM);
 

@@ -1,11 +1,11 @@
 import * as styles from "@/features/guitarScales/components/MiniMetronomeBar/MiniMetronomeBar.css";
 import { PlayPauseIcon } from "@/components/PlayPauseIcon/PlayPauseIcon";
 import {
-  metronomeSettings,
-  useBPM,
-} from "@/features/metronome/lib/metronomeSettings";
+  useBpmKeyControl,
+  useTogglePlayKeyControl,
+} from "@/features/metronome/lib/keyboardControls";
+import { useBPM } from "@/features/metronome/lib/metronomeSettings";
 import { scheduler, useIsPlaying } from "@/features/metronome/lib/scheduler";
-import { useKeyControl } from "@/hooks/useKeyControl";
 import { secondsPerBeat } from "@/lib/bpm";
 import clsx from "clsx";
 
@@ -13,9 +13,8 @@ export const MiniMetronomeBar = () => {
   const isPlaying = useIsPlaying();
   const bpm = useBPM();
 
-  useKeyControl(" ", scheduler.toggle);
-  useKeyControl("ArrowRight", () => metronomeSettings.setBPM(bpm + 1));
-  useKeyControl("ArrowLeft", () => metronomeSettings.setBPM(bpm - 1));
+  useTogglePlayKeyControl();
+  useBpmKeyControl();
 
   return (
     <div className={styles.root}>

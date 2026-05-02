@@ -17,9 +17,11 @@ import { Stopwatch } from "@/features/metronome/components/Stopwatch/Stopwatch";
 import { TapTempoButton } from "@/features/metronome/components/TapTempoButton/TapTempoButton";
 import { VolumeController } from "@/features/metronome/components/VolumeController/VolumeController";
 import { BEAT_OPTIONS } from "@/features/metronome/lib/beatsPerMeasure";
+import { SHORTCUTS } from "@/features/metronome/lib/keyboardControls";
 import { tempoName } from "@/features/metronome/lib/tempoName";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import clsx from "clsx";
+import { Fragment } from "react";
 
 export const Metronome = () => {
   const focusedFeature = useFocusedFeature();
@@ -152,14 +154,12 @@ const ConsoleDesktop = () => {
           <div className={styles.shortcuts}>
             <span className={styles.label}>Shortcuts</span>
             <div className={styles.shortcutsGrid}>
-              <span>Play / Stop</span>
-              <span className={styles.shortcutKey}>Space</span>
-              <span>BPM ± 1</span>
-              <span className={styles.shortcutKey}>← →</span>
-              <span>Volume ± 5%</span>
-              <span className={styles.shortcutKey}>↑ ↓</span>
-              <span>Tap tempo</span>
-              <span className={styles.shortcutKey}>T</span>
+              {SHORTCUTS.map(({ description, keys }) => (
+                <Fragment key={description}>
+                  <span>{description}</span>
+                  <span className={styles.shortcutKey}>{keys}</span>
+                </Fragment>
+              ))}
             </div>
           </div>
         </div>

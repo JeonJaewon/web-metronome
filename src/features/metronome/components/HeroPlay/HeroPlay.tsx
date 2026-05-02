@@ -1,7 +1,7 @@
 import * as styles from "@/features/metronome/components/HeroPlay/HeroPlay.css";
 import { PlayPauseIcon } from "@/components/PlayPauseIcon/PlayPauseIcon";
+import { useTogglePlayKeyControl } from "@/features/metronome/lib/keyboardControls";
 import { scheduler, useIsPlaying } from "@/features/metronome/lib/scheduler";
-import { useKeyControl } from "@/hooks/useKeyControl";
 import clsx from "clsx";
 
 type Props = {
@@ -11,8 +11,7 @@ type Props = {
 
 export const HeroPlay = ({ height = 84, showLabel = true }: Props) => {
   const isPlaying = useIsPlaying();
-
-  useKeyControl(" ", scheduler.toggle);
+  useTogglePlayKeyControl();
 
   const iconSize = Math.round(height * 0.32);
   const radius = Math.round(height * 0.22);
