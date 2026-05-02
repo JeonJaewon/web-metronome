@@ -1,6 +1,6 @@
 import { Feature, featureStore, useFocusedFeature } from "@/app/feature";
 import * as styles from "@/components/ModeSwitcher/ModeSwitcher.css";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { useIsPlaying } from "@/features/metronome/lib/scheduler";
 import { useDismiss } from "@/hooks/useDismiss";
 import clsx from "clsx";
 import { ReactElement, useCallback, useRef, useState } from "react";
@@ -20,7 +20,7 @@ const MODES: { key: Feature; label: string; Icon: () => ReactElement }[] = [
 
 export const ModeSwitcher = ({ size = "md" }: Props) => {
   const focusedFeature = useFocusedFeature();
-  const { isPlaying } = useMetronomeScheduler();
+  const isPlaying = useIsPlaying();
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const close = useCallback(() => setOpen(false), []);

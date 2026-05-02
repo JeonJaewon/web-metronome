@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import * as styles from "@/features/metronome/components/HalfCircleVisualizer/HalfCircleVisualizer.css";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import {
+  scheduler,
+  useIsPlaying,
+  useTotalBeats,
+} from "@/features/metronome/lib/scheduler";
 import { vars } from "@/features/metronome/theme.css";
 
 const SWEEP_DEG = 75;
@@ -18,7 +22,8 @@ const angleFromProgress = (progress: number, forward: boolean) =>
   180 - 180 * (forward ? progress : 1 - progress);
 
 export const HalfCircleVisualizer = ({ height = 120 }: Props) => {
-  const { isPlaying, totalBeats, getProgress } = useMetronomeScheduler();
+  const isPlaying = useIsPlaying();
+  const totalBeats = useTotalBeats();
   const [, setTick] = useState(0);
 
   useEffect(() => {
@@ -31,7 +36,9 @@ export const HalfCircleVisualizer = ({ height = 120 }: Props) => {
   }, [isPlaying]);
 
   const forward = totalBeats % 2 === 1;
-  const angle = isPlaying ? angleFromProgress(getProgress(), forward) : 180;
+  const angle = isPlaying
+    ? angleFromProgress(scheduler.getProgress(), forward)
+    : 180;
 
   const W = height * 1.9;
   const H = height;

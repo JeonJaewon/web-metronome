@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { secondsPerBeat } from "@/lib/bpm";
 import { metronomeSettings } from "@/features/metronome/lib/metronomeSettings";
 import {
@@ -19,6 +20,13 @@ let state: SchedulerState = { isPlaying: false, currentBeat: 0, totalBeats: 0 };
 let nextNoteTime = audioContext.currentTime;
 let nextNoteTimer: ReturnType<typeof setTimeout> | undefined;
 const listeners = new Set<() => void>();
+
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+};
 
 const setState = (next: SchedulerState) => {
   state = next;
@@ -111,15 +119,17 @@ const getProgress = () => {
 
 export const scheduler = {
   getSnapshot: () => state,
-  subscribe: (listener: () => void) => {
-    listeners.add(listener);
-    return () => {
-      listeners.delete(listener);
-    };
-  },
+  subscribe,
   start,
   stop,
   toggle,
   restart,
   getProgress,
 };
+
+export const useIsPlaying = (): boolean =>
+  useSyncExternalStore(subscribe, () => state.isPlaying);
+export const useCurrentBeat = (): number =>
+  useSyncExternalStore(subscribe, () => state.currentBeat);
+export const useTotalBeats = (): number =>
+  useSyncExternalStore(subscribe, () => state.totalBeats);

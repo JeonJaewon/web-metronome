@@ -1,9 +1,12 @@
 import * as styles from "@/features/metronome/components/AccentToggleController/AccentToggleController.css";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import {
+  metronomeSettings,
+  useAccentEnabled,
+} from "@/features/metronome/lib/metronomeSettings";
 import clsx from "clsx";
 
 export function AccentToggleController() {
-  const { accentedBeatEnabled, toggleAccentEnabled } = useMetronomeScheduler();
+  const accentedBeatEnabled = useAccentEnabled();
   return (
     <label className={styles.root}>
       <span className={styles.label}>Accent · 1st beat</span>
@@ -11,7 +14,7 @@ export function AccentToggleController() {
         type="checkbox"
         className={styles.hiddenInput}
         checked={accentedBeatEnabled}
-        onChange={toggleAccentEnabled}
+        onChange={metronomeSettings.toggleAccentEnabled}
       />
       <span
         className={clsx(

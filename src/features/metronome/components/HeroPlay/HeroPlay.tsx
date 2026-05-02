@@ -1,6 +1,6 @@
 import * as styles from "@/features/metronome/components/HeroPlay/HeroPlay.css";
 import { PlayPauseIcon } from "@/components/PlayPauseIcon/PlayPauseIcon";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { scheduler, useIsPlaying } from "@/features/metronome/lib/scheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
 import clsx from "clsx";
 
@@ -10,9 +10,9 @@ type Props = {
 };
 
 export const HeroPlay = ({ height = 84, showLabel = true }: Props) => {
-  const { isPlaying, toggleMetronome } = useMetronomeScheduler();
+  const isPlaying = useIsPlaying();
 
-  useKeyControl(" ", toggleMetronome);
+  useKeyControl(" ", scheduler.toggle);
 
   const iconSize = Math.round(height * 0.32);
   const radius = Math.round(height * 0.22);
@@ -21,7 +21,7 @@ export const HeroPlay = ({ height = 84, showLabel = true }: Props) => {
   return (
     <button
       type="button"
-      onClick={toggleMetronome}
+      onClick={scheduler.toggle}
       aria-label={isPlaying ? "Stop" : "Start"}
       className={clsx(styles.root, isPlaying && styles.running)}
       style={{ height, borderRadius: radius, fontSize }}

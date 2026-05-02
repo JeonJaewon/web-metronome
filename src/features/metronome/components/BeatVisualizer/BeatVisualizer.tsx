@@ -1,5 +1,6 @@
 import * as styles from "@/features/metronome/components/BeatVisualizer/BeatVisualizer.css";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { useBeatsPerMeasure } from "@/features/metronome/lib/metronomeSettings";
+import { useCurrentBeat } from "@/features/metronome/lib/scheduler";
 import clsx from "clsx";
 
 type Props = {
@@ -8,7 +9,8 @@ type Props = {
 };
 
 const BeatVisualizer = ({ dotSize = 14, gap = 18 }: Props) => {
-  const { beatsPerMeasure, currentBeat } = useMetronomeScheduler();
+  const beatsPerMeasure = useBeatsPerMeasure();
+  const currentBeat = useCurrentBeat();
   return (
     <div className={styles.wrap} style={{ gap }}>
       {Array.from({ length: beatsPerMeasure }, (_, index) => {

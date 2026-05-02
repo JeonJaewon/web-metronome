@@ -1,10 +1,9 @@
 import { useCallback, useRef } from "react";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import { metronomeSettings } from "@/features/metronome/lib/metronomeSettings";
 
 const TAP_WINDOW_MS = 2000;
 
 export const useTapTempo = () => {
-  const { setBPM } = useMetronomeScheduler();
   const taps = useRef<number[]>([]);
 
   return useCallback(() => {
@@ -14,7 +13,7 @@ export const useTapTempo = () => {
     if (taps.current.length >= 2) {
       const arr = taps.current;
       const avg = (arr[arr.length - 1] - arr[0]) / (arr.length - 1);
-      setBPM(60000 / avg);
+      metronomeSettings.setBPM(60000 / avg);
     }
-  }, [setBPM]);
+  }, []);
 };

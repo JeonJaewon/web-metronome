@@ -1,6 +1,9 @@
 import * as styles from "@/features/metronome/components/DisplayModule/DisplayModule.css";
+import {
+  useBeatsPerMeasure,
+  useBPM,
+} from "@/features/metronome/lib/metronomeSettings";
 import { tempoName } from "@/features/metronome/lib/tempoName";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import clsx from "clsx";
 
 type Size = "small" | "medium" | "large";
@@ -10,7 +13,8 @@ type Props = {
 };
 
 export const DisplayModule = ({ size = "medium" }: Props) => {
-  const { bpm, beatsPerMeasure } = useMetronomeScheduler();
+  const bpm = useBPM();
+  const beatsPerMeasure = useBeatsPerMeasure();
   const display = String(Math.max(0, Math.min(999, bpm))).padStart(3, "0");
   const [d0, d1, d2] = display;
 

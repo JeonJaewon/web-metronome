@@ -1,16 +1,21 @@
 import * as styles from "@/features/guitarScales/components/MiniMetronomeBar/MiniMetronomeBar.css";
 import { PlayPauseIcon } from "@/components/PlayPauseIcon/PlayPauseIcon";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import {
+  metronomeSettings,
+  useBPM,
+} from "@/features/metronome/lib/metronomeSettings";
+import { scheduler, useIsPlaying } from "@/features/metronome/lib/scheduler";
 import { useKeyControl } from "@/hooks/useKeyControl";
 import { secondsPerBeat } from "@/lib/bpm";
 import clsx from "clsx";
 
 export const MiniMetronomeBar = () => {
-  const { isPlaying, bpm, toggleMetronome, setBPM } = useMetronomeScheduler();
+  const isPlaying = useIsPlaying();
+  const bpm = useBPM();
 
-  useKeyControl(" ", toggleMetronome);
-  useKeyControl("ArrowRight", () => setBPM(bpm + 1));
-  useKeyControl("ArrowLeft", () => setBPM(bpm - 1));
+  useKeyControl(" ", scheduler.toggle);
+  useKeyControl("ArrowRight", () => metronomeSettings.setBPM(bpm + 1));
+  useKeyControl("ArrowLeft", () => metronomeSettings.setBPM(bpm - 1));
 
   return (
     <div className={styles.root}>
@@ -22,7 +27,7 @@ export const MiniMetronomeBar = () => {
       <span className={styles.bpmLabel}>BPM</span>
       <button
         type="button"
-        onClick={toggleMetronome}
+        onClick={scheduler.toggle}
         aria-label={isPlaying ? "Pause" : "Play"}
         className={clsx(styles.playButton, isPlaying && styles.playButtonRunning)}
       >

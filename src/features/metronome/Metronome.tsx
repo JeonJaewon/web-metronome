@@ -1,6 +1,12 @@
 import { useFocusedFeature } from "@/app/feature";
 import { ModeSwitcher } from "@/components/ModeSwitcher/ModeSwitcher";
 import * as styles from "@/features/metronome/Metronome.css";
+import {
+  metronomeSettings,
+  useBeatsPerMeasure,
+  useBPM,
+} from "@/features/metronome/lib/metronomeSettings";
+import { useIsPlaying } from "@/features/metronome/lib/scheduler";
 import { AccentToggleController } from "@/features/metronome/components/AccentToggleController/AccentToggleController";
 import { BPMController } from "@/features/metronome/components/BPMController/BPMController";
 import { DisplayModule } from "@/features/metronome/components/DisplayModule/DisplayModule";
@@ -12,7 +18,6 @@ import { TapTempoButton } from "@/features/metronome/components/TapTempoButton/T
 import { VolumeController } from "@/features/metronome/components/VolumeController/VolumeController";
 import { BEAT_OPTIONS } from "@/features/metronome/lib/beatsPerMeasure";
 import { tempoName } from "@/features/metronome/lib/tempoName";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import clsx from "clsx";
 
@@ -41,7 +46,9 @@ type StatusRowProps = {
 };
 
 const StatusRow = ({ switcherSize = "md", showRunning }: StatusRowProps) => {
-  const { isPlaying, bpm, beatsPerMeasure } = useMetronomeScheduler();
+  const isPlaying = useIsPlaying();
+  const bpm = useBPM();
+  const beatsPerMeasure = useBeatsPerMeasure();
   return (
     <div className={styles.statusRow}>
       <div className={styles.statusLeft}>
@@ -96,7 +103,7 @@ const ConsoleTablet = () => (
 );
 
 const ConsoleDesktop = () => {
-  const { beatsPerMeasure, setBeatsPerMeasure } = useMetronomeScheduler();
+  const beatsPerMeasure = useBeatsPerMeasure();
   return (
     <div className={styles.consoleDesktop}>
       <StatusRow switcherSize="lg" showRunning />
@@ -128,7 +135,7 @@ const ConsoleDesktop = () => {
                   <button
                     type="button"
                     key={beats}
-                    onClick={() => setBeatsPerMeasure(beats)}
+                    onClick={() => metronomeSettings.setBeatsPerMeasure(beats)}
                     className={clsx(
                       styles.meterGridButton,
                       active && styles.meterGridButtonActive

@@ -1,13 +1,16 @@
 import * as styles from "@/features/metronome/components/BPMController/BPMController.css";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import {
+  metronomeSettings,
+  useBPM,
+} from "@/features/metronome/lib/metronomeSettings";
 import { useKeyControl } from "@/hooks/useKeyControl";
 import { MAX_BPM, MIN_BPM } from "@/lib/bpm";
 
 export function BPMController() {
-  const { bpm, setBPM } = useMetronomeScheduler();
+  const bpm = useBPM();
 
-  useKeyControl("ArrowRight", () => setBPM(bpm + 1));
-  useKeyControl("ArrowLeft", () => setBPM(bpm - 1));
+  useKeyControl("ArrowRight", () => metronomeSettings.setBPM(bpm + 1));
+  useKeyControl("ArrowLeft", () => metronomeSettings.setBPM(bpm - 1));
 
   const frac = (bpm - MIN_BPM) / (MAX_BPM - MIN_BPM);
 
@@ -20,7 +23,7 @@ export function BPMController() {
             type="button"
             className={styles.stepBtn}
             aria-label="Decrease BPM"
-            onClick={() => setBPM(bpm - 1)}
+            onClick={() => metronomeSettings.setBPM(bpm - 1)}
           >
             –
           </button>
@@ -28,7 +31,7 @@ export function BPMController() {
             type="button"
             className={styles.stepBtn}
             aria-label="Increase BPM"
-            onClick={() => setBPM(bpm + 1)}
+            onClick={() => metronomeSettings.setBPM(bpm + 1)}
           >
             +
           </button>
@@ -41,7 +44,7 @@ export function BPMController() {
           max={MAX_BPM}
           step={1}
           value={bpm}
-          onChange={(e) => setBPM(Number(e.target.value))}
+          onChange={(e) => metronomeSettings.setBPM(Number(e.target.value))}
           className={styles.range}
           aria-label="BPM"
         />

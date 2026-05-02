@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { clampBpm } from "@/lib/bpm";
 
 type MetronomeSettings = {
@@ -21,14 +22,16 @@ const set = (next: MetronomeSettings) => {
   for (const listener of listeners) listener();
 };
 
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+};
+
 export const metronomeSettings = {
   getSnapshot: () => state,
-  subscribe: (listener: () => void) => {
-    listeners.add(listener);
-    return () => {
-      listeners.delete(listener);
-    };
-  },
+  subscribe,
   setBPM: (bpm: number) => set({ ...state, bpm: clampBpm(bpm) }),
   setVolume: (volume: number) => set({ ...state, volume }),
   setBeatsPerMeasure: (beats: number) =>
@@ -36,3 +39,12 @@ export const metronomeSettings = {
   toggleAccentEnabled: () =>
     set({ ...state, accentedBeatEnabled: !state.accentedBeatEnabled }),
 };
+
+export const useBPM = (): number =>
+  useSyncExternalStore(subscribe, () => state.bpm);
+export const useVolume = (): number =>
+  useSyncExternalStore(subscribe, () => state.volume);
+export const useBeatsPerMeasure = (): number =>
+  useSyncExternalStore(subscribe, () => state.beatsPerMeasure);
+export const useAccentEnabled = (): boolean =>
+  useSyncExternalStore(subscribe, () => state.accentedBeatEnabled);

@@ -1,5 +1,8 @@
 import * as styles from "@/features/metronome/components/VolumeController/VolumeController.css";
-import { useMetronomeScheduler } from "@/features/metronome/lib/useMetronomeScheduler";
+import {
+  metronomeSettings,
+  useVolume,
+} from "@/features/metronome/lib/metronomeSettings";
 import { useKeyControl } from "@/hooks/useKeyControl";
 
 const MIN_VOLUME_LEVEL = 0;
@@ -12,14 +15,18 @@ const toPercent = (value: number) =>
   Math.round((value / MAX_VOLUME_LEVEL) * 100);
 
 export function VolumeController() {
-  const { volume, setVolume } = useMetronomeScheduler();
+  const volume = useVolume();
 
   useKeyControl("ArrowUp", () => {
-    setVolume(Math.min(volume + VOLUME_KEYBOARD_STEP, MAX_VOLUME_LEVEL));
+    metronomeSettings.setVolume(
+      Math.min(volume + VOLUME_KEYBOARD_STEP, MAX_VOLUME_LEVEL)
+    );
   });
 
   useKeyControl("ArrowDown", () => {
-    setVolume(Math.max(volume - VOLUME_KEYBOARD_STEP, MIN_VOLUME_LEVEL));
+    metronomeSettings.setVolume(
+      Math.max(volume - VOLUME_KEYBOARD_STEP, MIN_VOLUME_LEVEL)
+    );
   });
 
   const frac = volume / MAX_VOLUME_LEVEL;
@@ -37,7 +44,7 @@ export function VolumeController() {
           max={MAX_VOLUME_LEVEL}
           step={VOLUME_INPUT_STEP}
           value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
+          onChange={(e) => metronomeSettings.setVolume(Number(e.target.value))}
           className={styles.range}
           aria-label="Volume"
         />
