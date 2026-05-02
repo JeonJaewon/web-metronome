@@ -1,26 +1,21 @@
 import * as styles from "@/features/guitarScales/components/ScaleSummary/ScaleSummary.css";
-import {
-  GuitarScaleType,
-  Note,
-  SCALE_DEFINITIONS,
-} from "@/features/guitarScales/scale";
+import { Scale } from "@/features/guitarScales/scale";
 import clsx from "clsx";
 
 type Size = "sm" | "md" | "lg";
 
 type Props = {
-  rootNote: Note;
-  scaleType: GuitarScaleType;
+  scale: Scale;
   size?: Size;
 };
 
-export const ScaleSummary = ({ rootNote, scaleType, size = "md" }: Props) => (
+export const ScaleSummary = ({ scale, size = "md" }: Props) => (
   <div className={styles.root}>
     <span className={clsx(styles.rootNote, styles.rootSizes[size])}>
-      {rootNote}
+      {scale.root}
     </span>
     <span className={clsx(styles.scaleName, styles.scaleSizes[size])}>
-      {SCALE_DEFINITIONS[scaleType].name}
+      {scale.definition.name}
     </span>
   </div>
 );

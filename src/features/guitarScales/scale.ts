@@ -1,13 +1,3 @@
-export const GuitarScale = {
-  MajorPentatonic: "MajorPentatonic",
-  MinorPentatonic: "MinorPentatonic",
-  Major: "Major",
-  Minor: "Minor",
-  Blues: "Blues",
-} as const;
-
-export type GuitarScaleType = keyof typeof GuitarScale;
-
 export const NOTES = [
   "C",
   "C#",
@@ -23,20 +13,30 @@ export const NOTES = [
   "B",
 ] as const;
 
-export const OPEN_NOTES = ["E", "A", "D", "G", "B", "E"] as const;
-
 export type Note = (typeof NOTES)[number];
-export type OpenNote = (typeof OPEN_NOTES)[number];
 
-export const isGuitarScaleType = (value: unknown): value is GuitarScaleType => {
-  return typeof value === "string" && value in GuitarScale;
-};
+declare const __pitchClassBrand: unique symbol;
+export type PitchClass = number & { readonly [__pitchClassBrand]: never };
 
-export const isNote = (value: unknown): value is Note => {
-  return typeof value === "string" && NOTES.includes(value as Note);
-};
+export const pitchClass = (n: number): PitchClass =>
+  (((n % 12) + 12) % 12) as PitchClass;
 
-type ScaleDefinition = {
+export const noteToPitchClass = (note: Note): PitchClass =>
+  NOTES.indexOf(note) as PitchClass;
+
+export const pitchClassToNote = (pc: PitchClass): Note => NOTES[pc];
+
+export const GuitarScale = {
+  MajorPentatonic: "MajorPentatonic",
+  MinorPentatonic: "MinorPentatonic",
+  Major: "Major",
+  Minor: "Minor",
+  Blues: "Blues",
+} as const;
+
+export type GuitarScaleType = keyof typeof GuitarScale;
+
+export type ScaleDefinition = {
   name: string;
   intervals: number[];
   degrees: string[];
@@ -72,31 +72,28 @@ export const SCALE_DEFINITIONS: Record<GuitarScaleType, ScaleDefinition> = {
 
 export const SCALE_LIST = Object.keys(SCALE_DEFINITIONS) as GuitarScaleType[];
 
-export const TUNING_PCS = OPEN_NOTES.map((n) => NOTES.indexOf(n as Note));
+export type Scale = {
+  readonly root: Note;
+  readonly type: GuitarScaleType;
+  readonly definition: ScaleDefinition;
+  readonly pitchClasses: readonly PitchClass[];
+  readonly notes: readonly Note[];
+};
+
+export const buildScale = (root: Note, type: GuitarScaleType): Scale => {
+  const definition = SCALE_DEFINITIONS[type];
+  const rootPc = noteToPitchClass(root);
+  const pitchClasses = definition.intervals.map((iv) =>
+    pitchClass(rootPc + iv)
+  );
+  const notes = pitchClasses.map(pitchClassToNote);
+  return { root, type, definition, pitchClasses, notes };
+};
+
+export const degreeOf = (scale: Scale, pc: PitchClass): string | null => {
+  const offset = pitchClass(pc - noteToPitchClass(scale.root));
+  const ix = scale.definition.intervals.indexOf(offset);
+  return ix >= 0 ? scale.definition.degrees[ix] : null;
+};
 
 export type LabelMode = "note" | "degree";
-
-export const getScaleNotes = (root: Note, type: GuitarScaleType): Note[] => {
-  const idx = NOTES.indexOf(root);
-  return SCALE_DEFINITIONS[type].intervals.map(
-    (i) => NOTES[(idx + i) % NOTES.length]
-  );
-};
-
-export const scalePitchClasses = (root: Note, type: GuitarScaleType): number[] => {
-  const rootPc = NOTES.indexOf(root);
-  return SCALE_DEFINITIONS[type].intervals.map((iv) => (rootPc + iv) % 12);
-};
-
-export const pcToDegree = (
-  pc: number,
-  root: Note,
-  type: GuitarScaleType
-): string | null => {
-  const rootPc = NOTES.indexOf(root);
-  const offset = (pc - rootPc + 12) % 12;
-  const ix = SCALE_DEFINITIONS[type].intervals.indexOf(offset);
-  return ix >= 0 ? SCALE_DEFINITIONS[type].degrees[ix] : null;
-};
-
-export const pcToName = (pc: number): Note => NOTES[((pc % 12) + 12) % 12];

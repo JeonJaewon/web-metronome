@@ -7,14 +7,14 @@ import { MiniMetronomeBar } from "@/features/guitarScales/components/MiniMetrono
 import { RootPicker } from "@/features/guitarScales/components/RootPicker/RootPicker";
 import { ScalePicker } from "@/features/guitarScales/components/ScalePicker/ScalePicker";
 import { ScaleSummary } from "@/features/guitarScales/components/ScaleSummary/ScaleSummary";
+import { clampFretPosition } from "@/features/guitarScales/guitar";
 import {
+  buildScale,
   GuitarScale,
   GuitarScaleType,
   LabelMode,
   Note,
-  pcToName,
-  SCALE_DEFINITIONS,
-  scalePitchClasses,
+  Scale,
 } from "@/features/guitarScales/scale";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import clsx from "clsx";
@@ -39,6 +39,8 @@ export const GuitarScales = () => {
 
   if (focusedFeature !== "guitarScales") return null;
 
+  const scale = buildScale(state.rootNote, state.scaleType);
+
   const setRootNote = (rootNote: Note) =>
     setState((s) => ({ ...s, rootNote }));
   const setScaleType = (scaleType: GuitarScaleType) =>
@@ -46,10 +48,11 @@ export const GuitarScales = () => {
   const setLabelMode = (labelMode: LabelMode) =>
     setState((s) => ({ ...s, labelMode }));
   const setPosition = (position: number) =>
-    setState((s) => ({ ...s, position }));
+    setState((s) => ({ ...s, position: clampFretPosition(position) }));
 
   const layoutProps = {
     state,
+    scale,
     setRootNote,
     setScaleType,
     setLabelMode,
@@ -71,6 +74,7 @@ export const GuitarScales = () => {
 
 type LayoutProps = {
   state: State;
+  scale: Scale;
   setRootNote: (note: Note) => void;
   setScaleType: (type: GuitarScaleType) => void;
   setLabelMode: (mode: LabelMode) => void;
@@ -79,6 +83,7 @@ type LayoutProps = {
 
 const ScalesMobile = ({
   state,
+  scale,
   setRootNote,
   setScaleType,
   setLabelMode,
@@ -91,19 +96,13 @@ const ScalesMobile = ({
     </div>
     <div className={styles.nowShowing}>
       <span className={styles.subLabel}>Now showing</span>
-      <ScaleSummary
-        rootNote={state.rootNote}
-        scaleType={state.scaleType}
-        size="md"
-      />
+      <ScaleSummary scale={scale} size="md" />
       <span className={styles.subLabel}>
-        Position {state.position} ·{" "}
-        {SCALE_DEFINITIONS[state.scaleType].degrees.length} notes
+        Position {state.position} · {scale.definition.degrees.length} notes
       </span>
     </div>
     <Fretboard
-      rootNote={state.rootNote}
-      scaleType={state.scaleType}
+      scale={scale}
       labelMode={state.labelMode}
       position={state.position}
       onPositionChange={setPosition}
@@ -129,6 +128,7 @@ const ScalesMobile = ({
 
 const ScalesTablet = ({
   state,
+  scale,
   setRootNote,
   setScaleType,
   setLabelMode,
@@ -142,16 +142,11 @@ const ScalesTablet = ({
     <div className={styles.tabletBody}>
       <div className={styles.tabletLeft}>
         <div className={styles.summaryRow}>
-          <ScaleSummary
-            rootNote={state.rootNote}
-            scaleType={state.scaleType}
-            size="md"
-          />
+          <ScaleSummary scale={scale} size="md" />
           <MiniMetronomeBar />
         </div>
         <Fretboard
-          rootNote={state.rootNote}
-          scaleType={state.scaleType}
+          scale={scale}
           labelMode={state.labelMode}
           position={state.position}
           onPositionChange={setPosition}
@@ -176,67 +171,61 @@ const ScalesTablet = ({
 
 const ScalesDesktop = ({
   state,
+  scale,
   setRootNote,
   setScaleType,
   setLabelMode,
   setPosition,
-}: LayoutProps) => {
-  const pcs = scalePitchClasses(state.rootNote, state.scaleType);
-  const degrees = SCALE_DEFINITIONS[state.scaleType].degrees;
-  return (
-    <div className={styles.consoleDesktop}>
-      <div className={styles.headerRow}>
-        <ModeSwitcher size="lg" />
-        <div className={styles.headerActions}>
-          <LabelToggle value={state.labelMode} onChange={setLabelMode} />
-          <MiniMetronomeBar />
+}: LayoutProps) => (
+  <div className={styles.consoleDesktop}>
+    <div className={styles.headerRow}>
+      <ModeSwitcher size="lg" />
+      <div className={styles.headerActions}>
+        <LabelToggle value={state.labelMode} onChange={setLabelMode} />
+        <MiniMetronomeBar />
+      </div>
+    </div>
+    <div className={styles.desktopBody}>
+      <div className={styles.desktopLeft}>
+        <ScaleSummary scale={scale} size="lg" />
+        <Fretboard
+          scale={scale}
+          labelMode={state.labelMode}
+          position={state.position}
+          onPositionChange={setPosition}
+          height={320}
+        />
+        <div className={styles.sectionGap}>
+          <span className={styles.sectionLabel}>Root</span>
+          <RootPicker value={state.rootNote} onChange={setRootNote} />
         </div>
       </div>
-      <div className={styles.desktopBody}>
-        <div className={styles.desktopLeft}>
-          <ScaleSummary
-            rootNote={state.rootNote}
-            scaleType={state.scaleType}
-            size="lg"
-          />
-          <Fretboard
-            rootNote={state.rootNote}
-            scaleType={state.scaleType}
-            labelMode={state.labelMode}
-            position={state.position}
-            onPositionChange={setPosition}
-            height={320}
-          />
-          <div className={styles.sectionGap}>
-            <span className={styles.sectionLabel}>Root</span>
-            <RootPicker value={state.rootNote} onChange={setRootNote} />
-          </div>
-        </div>
-        <div className={styles.desktopRight}>
-          <span className={styles.sectionLabel}>Scale</span>
-          <ScalePicker
-            value={state.scaleType}
-            onChange={setScaleType}
-            layout="list"
-          />
-          <div className={styles.desktopFooter}>
-            <span className={styles.sectionLabel}>Notes in scale</span>
-            <div className={styles.notesList}>
-              {pcs.map((pc, ix) => (
-                <span
-                  key={ix}
-                  className={clsx(
-                    styles.noteChip,
-                    ix === 0 && styles.noteChipRoot
-                  )}
-                >
-                  {state.labelMode === "note" ? pcToName(pc) : degrees[ix]}
-                </span>
-              ))}
-            </div>
+      <div className={styles.desktopRight}>
+        <span className={styles.sectionLabel}>Scale</span>
+        <ScalePicker
+          value={state.scaleType}
+          onChange={setScaleType}
+          layout="list"
+        />
+        <div className={styles.desktopFooter}>
+          <span className={styles.sectionLabel}>Notes in scale</span>
+          <div className={styles.notesList}>
+            {scale.notes.map((note, ix) => (
+              <span
+                key={ix}
+                className={clsx(
+                  styles.noteChip,
+                  ix === 0 && styles.noteChipRoot
+                )}
+              >
+                {state.labelMode === "note"
+                  ? note
+                  : scale.definition.degrees[ix]}
+              </span>
+            ))}
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  </div>
+);

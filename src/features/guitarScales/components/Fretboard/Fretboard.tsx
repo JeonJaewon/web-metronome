@@ -1,29 +1,30 @@
 import * as styles from "@/features/guitarScales/components/Fretboard/Fretboard.css";
 import {
-  GuitarScaleType,
-  LabelMode,
-  Note,
-  NOTES,
+  clampFretPosition,
+  FRET_COUNT,
+  INLAY_FRETS,
   OPEN_NOTES,
-  pcToDegree,
-  pcToName,
-  scalePitchClasses,
-  TUNING_PCS,
+  POSITION_WIDTH,
+  STRING_COUNT,
+  TUNING,
+} from "@/features/guitarScales/guitar";
+import {
+  degreeOf,
+  LabelMode,
+  pitchClass,
+  PitchClass,
+  pitchClassToNote,
+  Scale,
 } from "@/features/guitarScales/scale";
 import { vars } from "@/features/metronome/theme.css";
 import { useEffect, useRef, useState } from "react";
 
-const FRET_COUNT = 12;
-const STRINGS = 6;
-const POSITION_WIDTH = 4;
 const PAD_LEFT = 36;
 const PAD_RIGHT = 12;
 const TOP_OFFSET = 18;
-const INLAYS = [3, 5, 7, 9, 12];
 
 type Props = {
-  rootNote: Note;
-  scaleType: GuitarScaleType;
+  scale: Scale;
   labelMode: LabelMode;
   position: number;
   onPositionChange: (value: number) => void;
@@ -31,9 +32,15 @@ type Props = {
   showPosition?: boolean;
 };
 
+type FretboardNote = {
+  s: number;
+  f: number;
+  pc: PitchClass;
+  isRoot: boolean;
+};
+
 export const Fretboard = ({
-  rootNote,
-  scaleType,
+  scale,
   labelMode,
   position,
   onPositionChange,
@@ -55,25 +62,20 @@ export const Fretboard = ({
 
   const innerW = Math.max(0, width - PAD_LEFT - PAD_RIGHT);
   const fretW = innerW / FRET_COUNT;
-  const stringH = (height - TOP_OFFSET - 6) / STRINGS;
+  const stringH = (height - TOP_OFFSET - 6) / STRING_COUNT;
   const stringY = (i: number) =>
-    TOP_OFFSET + (STRINGS - 1 - i) * stringH + stringH / 2;
+    TOP_OFFSET + (STRING_COUNT - 1 - i) * stringH + stringH / 2;
   const fretX = (f: number) => PAD_LEFT + (f - 0.5) * fretW;
   const fretLineX = (f: number) => PAD_LEFT + f * fretW;
 
-  const pcs = scalePitchClasses(rootNote, scaleType);
-  const rootPc = NOTES.indexOf(rootNote);
+  const rootPc = scale.pitchClasses[0];
   const noteR = Math.min(stringH * 0.42, fretW * 0.42, 16);
 
   const handlePoint = (clientX: number) => {
     if (!containerRef.current || fretW <= 0) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = clientX - rect.left - PAD_LEFT;
-    const f = Math.max(
-      0,
-      Math.min(FRET_COUNT - POSITION_WIDTH, Math.round(x / fretW))
-    );
-    onPositionChange(f);
+    onPositionChange(clampFretPosition(x / fretW));
   };
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -92,11 +94,12 @@ export const Fretboard = ({
     }
   };
 
-  const notes: { s: number; f: number; pc: number; isRoot: boolean }[] = [];
-  for (let s = 0; s < STRINGS; s++) {
+  const notes: FretboardNote[] = [];
+  for (let s = 0; s < STRING_COUNT; s++) {
     for (let f = 0; f <= FRET_COUNT; f++) {
-      const pc = (TUNING_PCS[s] + f) % 12;
-      if (pcs.includes(pc)) notes.push({ s, f, pc, isRoot: pc === rootPc });
+      const pc = pitchClass(TUNING[s] + f);
+      if (scale.pitchClasses.includes(pc))
+        notes.push({ s, f, pc, isRoot: pc === rootPc });
     }
   }
 
@@ -128,8 +131,8 @@ export const Fretboard = ({
             </text>
           ))}
 
-          {INLAYS.map((f) => {
-            const cy = TOP_OFFSET + (STRINGS * stringH) / 2;
+          {INLAY_FRETS.map((f) => {
+            const cy = TOP_OFFSET + (STRING_COUNT * stringH) / 2;
             if (f === 12) {
               return (
                 <g key={`inlay-${f}`}>
@@ -164,7 +167,7 @@ export const Fretboard = ({
               x={fretLineX(position)}
               y={TOP_OFFSET}
               width={fretW * POSITION_WIDTH}
-              height={STRINGS * stringH}
+              height={STRING_COUNT * stringH}
               fill={vars.color.accent}
               opacity={0.07}
             />
@@ -176,13 +179,13 @@ export const Fretboard = ({
               x1={fretLineX(f)}
               x2={fretLineX(f)}
               y1={TOP_OFFSET}
-              y2={TOP_OFFSET + STRINGS * stringH}
+              y2={TOP_OFFSET + STRING_COUNT * stringH}
               stroke={f === 0 ? vars.color.fretboardString : vars.color.fretboardInlay}
               strokeWidth={f === 0 ? 4 : 1}
             />
           ))}
 
-          {Array.from({ length: STRINGS }, (_, i) => i).map((i) => (
+          {Array.from({ length: STRING_COUNT }, (_, i) => i).map((i) => (
             <line
               key={`str-${i}`}
               x1={PAD_LEFT}
@@ -195,7 +198,7 @@ export const Fretboard = ({
             />
           ))}
 
-          {Array.from({ length: STRINGS }, (_, i) => i).map((i) => (
+          {Array.from({ length: STRING_COUNT }, (_, i) => i).map((i) => (
             <text
               key={`sl-${i}`}
               x={PAD_LEFT - 14}
@@ -219,8 +222,8 @@ export const Fretboard = ({
             const opacity = inPos ? 1 : 0.32;
             const label =
               labelMode === "note"
-                ? pcToName(pc)
-                : pcToDegree(pc, rootNote, scaleType) ?? "";
+                ? pitchClassToNote(pc)
+                : degreeOf(scale, pc) ?? "";
             const txtColor = isRoot
               ? vars.color.onAccent
               : vars.color.fretboardNoteText;
