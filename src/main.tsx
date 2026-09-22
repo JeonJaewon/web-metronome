@@ -1,15 +1,12 @@
 import "@/styles/animations.css";
-import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./app/App.tsx";
+import { hydrateRoot } from "react-dom/client";
+import Site from "./app/Site.tsx";
 import "./index.css";
 
-createRoot(document.getElementById("root")!).render(
+hydrateRoot(document.getElementById("root")!,
   <StrictMode>
-    <MantineProvider>
-      <App />
-    </MantineProvider>
+    <Site />
   </StrictMode>
 );

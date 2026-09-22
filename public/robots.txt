@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+
+# Crawlers read /robots.txt at the origin root, not /web-metronome/robots.txt.
+# Also add this Sitemap line to the root site's robots.txt, or submit it in Search Console.
+Sitemap: https://jeonjaewon.github.io/web-metronome/sitemap.xml

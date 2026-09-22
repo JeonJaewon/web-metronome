@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from "react";
+import { type Feature, featureFromPath, pages } from "../seo/pages";
 
-export type Feature = "metronome" | "guitarScales";
+export type { Feature } from "../seo/pages";
 
-let state: Feature = "metronome";
+let state: Feature = featureFromPath(window.location.pathname);
 const listeners = new Set<() => void>();
 
 const subscribe = (listener: () => void) => {
@@ -12,15 +13,25 @@ const subscribe = (listener: () => void) => {
   };
 };
 
+const setState = (next: Feature) => {
+  if (state === next) return;
+  state = next;
+  for (const listener of listeners) listener();
+};
+
+window.addEventListener("popstate", () => {
+  setState(featureFromPath(window.location.pathname));
+});
+
 export const featureStore = {
   getSnapshot: () => state,
   subscribe,
   setFocusedFeature: (next: Feature) => {
     if (state === next) return;
-    state = next;
-    for (const listener of listeners) listener();
+    window.history.pushState(null, "", pages[next].path);
+    setState(next);
   },
 };
 
 export const useFocusedFeature = (): Feature =>
-  useSyncExternalStore(subscribe, () => state);
+  useSyncExternalStore(subscribe, () => state, () => state);

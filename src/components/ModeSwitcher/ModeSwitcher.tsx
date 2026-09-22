@@ -1,4 +1,5 @@
 import { Feature, featureStore, useFocusedFeature } from "@/app/feature";
+import { pages } from "@/seo/pages";
 import * as styles from "@/components/ModeSwitcher/ModeSwitcher.css";
 import { useIsPlaying } from "@/features/metronome/lib/scheduler";
 import { useDismiss } from "@/hooks/useDismiss";
@@ -67,12 +68,14 @@ export const ModeSwitcher = ({ size = "md" }: Props) => {
           {MODES.map(({ key, label, Icon }) => {
             const active = key === focusedFeature;
             return (
-              <button
+              <a
                 key={key}
-                type="button"
+                href={pages[key].path}
                 role="menuitemradio"
                 aria-checked={active}
-                onClick={() => {
+                onClick={(event) => {
+                  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                  event.preventDefault();
                   featureStore.setFocusedFeature(key);
                   setOpen(false);
                 }}
@@ -99,7 +102,7 @@ export const ModeSwitcher = ({ size = "md" }: Props) => {
                     />
                   </svg>
                 )}
-              </button>
+              </a>
             );
           })}
         </div>

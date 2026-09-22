@@ -75,6 +75,7 @@ export const popover = style({
 });
 
 export const item = style({
+  textDecoration: "none",
   display: "flex",
   alignItems: "center",
   gap: "10px",
