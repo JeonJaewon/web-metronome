@@ -58,6 +58,7 @@ export const consoleDesktop = style({
 
 export const headerRow = style({
   display: "flex",
+  flexWrap: "wrap",
   alignItems: "center",
   justifyContent: "space-between",
   gap: "12px",
@@ -203,4 +204,3 @@ export const sectionGap = style({
   flexDirection: "column",
   gap: "10px",
 });
-

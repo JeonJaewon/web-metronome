@@ -36,52 +36,11 @@ body {
   min-height: 100vh;
 }
 
-.page-intro,
-.practice-guide,
-.page-footer,
 .javascript-notice {
-  width: min(100% - 36px, 1120px);
-  margin-inline: auto;
-}
-
-.page-intro {
-  padding-top: 28px;
-}
-
-.page-intro h1 {
-  margin: 0;
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 600;
-  letter-spacing: -0.035em;
-}
-
-.page-intro p {
-  max-width: 760px;
-  margin: 8px 0 12px;
-  color: #59544c;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.page-intro nav {
-  display: flex;
-  gap: 20px;
-  font-size: 14px;
-}
-
-.page-intro a,
-.practice-guide a,
-.page-footer a {
-  color: inherit;
-  text-underline-offset: 4px;
-}
-
-.page-intro a[aria-current="page"] {
-  font-weight: 600;
+  margin: 18px;
 }
 
 .practice-tool {
-  min-height: 760px;
   display: flow-root;
 }
 
@@ -89,52 +48,4 @@ body {
   padding: 32px 18px;
   text-align: center;
   color: #59544c;
-}
-
-.practice-guide {
-  border-top: 1px solid #cfc9bb;
-  padding-block: 24px;
-  line-height: 1.75;
-  color: #59544c;
-}
-
-.practice-guide h2 {
-  color: #14120f;
-  font-size: 20px;
-  line-height: 1.4;
-  margin: 24px 0 12px;
-}
-
-.practice-guide p,
-.practice-guide ol {
-  max-width: 780px;
-  margin-block: 12px;
-}
-
-.practice-guide ol {
-  padding-left: 24px;
-}
-
-.practice-guide li + li {
-  margin-top: 8px;
-}
-
-.page-footer {
-  padding-block: 0 32px;
-  color: #59544c;
-  font-size: 14px;
-}
-
-.skip-link {
-  position: absolute;
-  top: -80px;
-  left: 18px;
-  padding: 12px;
-  color: #14120f;
-  background: #f3efe6;
-  z-index: 100;
-}
-
-.skip-link:focus {
-  top: 8px;
 }

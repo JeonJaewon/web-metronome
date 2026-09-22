@@ -10,9 +10,6 @@ type Page = {
   name: string;
   title: string;
   description: string;
-  introduction: string;
-  steps: string[];
-  sections: { heading: string; text: string }[];
 };
 
 export const pages: Record<Feature, Page> = {
@@ -21,54 +18,12 @@ export const pages: Record<Feature, Page> = {
     name: "Free Online Metronome",
     title: "Free Online Metronome – Tap Tempo & BPM Control",
     description: `Practice with a free online metronome: ${MIN_BPM}–${MAX_BPM} BPM, tap tempo, beat accents and visual pulses. Use it for guitar, piano, drums or any instrument.`,
-    introduction: `Keep time with a free browser metronome. Set ${MIN_BPM}–${MAX_BPM} BPM, tap a tempo and follow the beat as you practice. No download or account needed.`,
-    steps: [
-      "Set your tempo with the BPM controls. BPM means beats per minute: at 60 BPM, each beat is one second apart.",
-      "Choose 2, 3, 4, 5 or 6 beats per measure. Enable the accent to hear the first beat of each measure more clearly.",
-      "Press Start to begin, then follow the sound and visual beat indicator. Press Stop when you finish.",
-      "To find a song’s tempo, tap the Tap tempo button several times at a steady pace, or press T on your keyboard.",
-    ],
-    sections: [
-      {
-        heading: "How to practice with a metronome",
-        text: "Start at a tempo where you can play a phrase evenly. Repeat it with one note per beat, then try two notes per beat. Increase the BPM gradually when the rhythm feels steady. The stopwatch helps you track your practice session.",
-      },
-      {
-        heading: "Keyboard shortcuts",
-        text: "In metronome mode, press Space to play or stop, Left or Right to change the tempo by 1 BPM, and T to tap a tempo. On tablet and desktop layouts, Up and Down adjust the volume by 5%.",
-      },
-      {
-        heading: "Sound and visual timing",
-        text: "The metronome schedules sound with the Web Audio API and offers beat dots or a pendulum display. Press Start to enable audio in your browser, and check your device volume if you cannot hear the clicks.",
-      },
-    ],
   },
   guitarScales: {
     path: `${BASE_PATH}guitar-scales/`,
     name: "Interactive Guitar Scale Chart",
     title: "Guitar Scale Chart – Pentatonic, Major, Minor & Blues",
     description: "Explore guitar scales on an interactive fretboard. Choose any root, view major, minor, pentatonic and blues scales, and practice with a built-in metronome.",
-    introduction: "Explore five guitar scales in any root on a standard-tuning fretboard. Switch between note names and scale degrees, and keep time with the built-in metronome.",
-    steps: [
-      "Choose a root note, such as A or C. The root is the note your scale is built around.",
-      "Select Major, Minor, Major Pentatonic, Minor Pentatonic or Blues to see the notes on the fretboard.",
-      "Move the fretboard position to explore the scale along the neck, and switch labels between note names and scale degrees.",
-      "Use the metronome controls to practice the displayed scale at a steady tempo.",
-    ],
-    sections: [
-      {
-        heading: "Major and minor scales",
-        text: "The major scale has seven degrees: 1, 2, 3, 4, 5, 6 and 7. The natural minor scale uses 1, 2, ♭3, 4, 5, ♭6 and ♭7. Compare them using the same root to see how the third, sixth and seventh change.",
-      },
-      {
-        heading: "Pentatonic and blues scales",
-        text: "Major pentatonic uses five degrees: 1, 2, 3, 5 and 6. Minor pentatonic uses 1, ♭3, 4, 5 and ♭7. The blues scale adds a ♭5 to minor pentatonic, giving you six notes to explore in riffs and improvisation.",
-      },
-      {
-        heading: "Reading the guitar fretboard",
-        text: "The chart uses standard guitar tuning: E, A, D, G, B and E from the lowest string to the highest. Highlighted root notes help you find your starting points. Degree labels show each note’s role relative to the root, so you can compare patterns across keys.",
-      },
-    ],
   },
 };
 

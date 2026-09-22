@@ -69,6 +69,8 @@ export const consoleDesktop = style({
 
 export const statusRow = style({
   display: "flex",
+  flexWrap: "wrap",
+  gap: "12px",
   alignItems: "center",
   justifyContent: "space-between",
 });

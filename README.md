@@ -35,12 +35,12 @@ The guitar scale chart has its own URL: [Guitar scales](https://jeonjaewon.githu
 
 `pnpm build` produces real HTML pages at `/web-metronome/` and
 `/web-metronome/guitar-scales/`, plus `dist/sitemap.xml`. Each page includes a
-visible heading, practice guide, internal links, its own title and description,
-canonical URL, Open Graph/Twitter metadata and WebApplication JSON-LD before
-JavaScript runs. The interactive controls load in the browser; the guide and
-navigation are prerendered and hydrated from the same React component.
+page-specific title and description, canonical URL, Open Graph/Twitter metadata
+and WebApplication JSON-LD before JavaScript runs. The interactive controls and
+mode tabs load in the browser. The initial HTML contains a minimal tool shell;
+there is no additional page header or practice guide.
 
-Edit page content and metadata in `src/seo/pages.ts` and shared markup in
+Edit page metadata in `src/seo/pages.ts` and shared markup in
 `src/seo/PageShell.tsx`. The Vite plugin renders the shell into both HTML entries.
 Keep the common font/icon/script tags in the two HTML templates in sync.
 Internal navigation uses browser history and preserves the running audio engine.
@@ -64,7 +64,7 @@ to inspect both generated pages, including direct visits, reloads and Back/Forwa
    after deployment. The markup describes the actual free tools; it contains no
    fabricated ratings or reviews.
 
-The interface and guides are English. If Korean search traffic becomes a goal,
+The interface is English. If Korean search traffic becomes a goal,
 add fully translated pages with separate URLs and reciprocal hreflang links.
 Use Search Console performance data and real-user Core Web Vitals to prioritize
 further improvements; neither is available from a repository-only audit.

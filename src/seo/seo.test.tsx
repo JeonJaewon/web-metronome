@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { hydrateRoot } from "react-dom/client";
 import { renderToString } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -18,22 +18,20 @@ afterEach(() => {
 });
 
 describe("static practice pages", () => {
-  it.each<Feature>(["metronome", "guitarScales"])("hydrates the %s guide without replacing the initial HTML", async (feature) => {
+  it.each<Feature>(["metronome", "guitarScales"])("hydrates the %s tool shell without extra page content", async (feature) => {
     featureStore.setFocusedFeature(feature);
     const container = document.createElement("div");
     container.innerHTML = renderToString(<div><PageShell feature={feature} /></div>);
     document.body.append(container);
-    const initialHeading = container.querySelector("h1");
+    const initialMain = container.querySelector("main");
     const onRecoverableError = vi.fn();
     const root = hydrateRoot(container, <Site />, { onRecoverableError });
 
     try {
-      // The explanatory text and real links must already exist without JS.
-      expect(initialHeading).toHaveTextContent(pages[feature].name);
-      expect(container.querySelectorAll("article li")).toHaveLength(4);
-      expect(container.querySelector(`a[href="${pages.guitarScales.path}"]`)).not.toBeNull();
+      expect(initialMain).toHaveAccessibleName(pages[feature].name);
       await waitFor(() => expect(screen.getByRole("button", { name: "Interactive practice controls" })).toBeInTheDocument());
-      expect(container.querySelector("h1")).toBe(initialHeading);
+      expect(container.querySelector("main")).toBe(initialMain);
+      expect(container.querySelector("header, article, footer, h1")).toBeNull();
       expect(onRecoverableError).not.toHaveBeenCalled();
     } finally {
       await act(() => root.unmount());
@@ -41,13 +39,13 @@ describe("static practice pages", () => {
     }
   });
 
-  it("updates the URL, heading and metadata on navigation and popstate", async () => {
+  it("updates the URL, tool label and metadata on navigation and popstate", async () => {
     window.history.replaceState(null, "", pages.metronome.path);
     render(<Site />);
-    fireEvent.click(screen.getByRole("link", { name: "Guitar scales" }));
+    act(() => featureStore.setFocusedFeature("guitarScales"));
 
     expect(window.location.pathname).toBe(pages.guitarScales.path);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(pages.guitarScales.name);
+    expect(screen.getByRole("main")).toHaveAccessibleName(pages.guitarScales.name);
     expect(document.title).toBe(pages.guitarScales.title);
     expect(document.querySelector('link[rel="canonical"]')).toHaveAttribute("href", `${SITE_ORIGIN}${pages.guitarScales.path}`);
 
@@ -58,7 +56,7 @@ describe("static practice pages", () => {
     });
     expect(featureStore.getSnapshot()).toBe("metronome");
     expect(document.title).toBe(pages.metronome.title);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(pages.metronome.name);
+    expect(screen.getByRole("main")).toHaveAccessibleName(pages.metronome.name);
     await waitFor(() => expect(screen.getByRole("button", { name: "Interactive practice controls" })).toBeInTheDocument());
   });
 
