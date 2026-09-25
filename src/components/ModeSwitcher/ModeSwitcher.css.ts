@@ -4,8 +4,9 @@ import { vars } from "@/styles/theme.css";
 export const wrap = style({
   display: "inline-flex",
   alignItems: "center",
+  flexWrap: "wrap",
   gap: "4px",
-  flexShrink: 0,
+  maxWidth: "100%",
 });
 
 export const tab = style({

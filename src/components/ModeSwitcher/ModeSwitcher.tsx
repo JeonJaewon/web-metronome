@@ -47,6 +47,12 @@ export const ModeSwitcher = ({ size = "md" }: Props) => {
           {label}
         </a>
       ))}
+      <a
+        href="https://pedalcanvas.com/"
+        className={clsx(styles.tab, styles.tabSizes[size])}
+      >
+        Pedalboard Planner
+      </a>
     </nav>
   );
 };
