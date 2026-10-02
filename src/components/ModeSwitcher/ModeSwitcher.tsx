@@ -3,8 +3,6 @@ import { pages } from "@/seo/pages";
 import * as styles from "@/components/ModeSwitcher/ModeSwitcher.css";
 import { useIsPlaying } from "@/features/metronome/lib/scheduler";
 import clsx from "clsx";
-import { useEffect, useRef } from "react";
-import { observePlannerLink, trackPlannerClick } from "@/lib/analytics";
 
 type Size = "sm" | "md" | "lg";
 
@@ -20,11 +18,6 @@ const MODES: { key: Feature; label: string }[] = [
 export const ModeSwitcher = ({ size = "md" }: Props) => {
   const focusedFeature = useFocusedFeature();
   const isPlaying = useIsPlaying();
-  const plannerLink = useRef<HTMLAnchorElement>(null);
-
-  useEffect(() => {
-    if (plannerLink.current) return observePlannerLink(plannerLink.current);
-  }, [focusedFeature]);
 
   return (
     <nav className={styles.wrap} aria-label="Tool mode">
@@ -55,13 +48,8 @@ export const ModeSwitcher = ({ size = "md" }: Props) => {
         </a>
       ))}
       <a
-        ref={plannerLink}
         href="https://pedalcanvas.com/"
         className={clsx(styles.tab, styles.tabSizes[size])}
-        onClick={trackPlannerClick}
-        onAuxClick={(event) => {
-          if (event.button === 1) trackPlannerClick();
-        }}
       >
         Pedalboard Planner
       </a>

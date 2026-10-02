@@ -31,27 +31,6 @@ The guitar scale chart has its own URL: [Guitar scales](https://jeonjaewon.githu
 - Vite
 - Web Audio API
 
-## Analytics
-
-Production builds load GA4 with measurement ID `G-LDNJ546913`. Development and
-tests do not load the Google script. The initial page view is sent by the Google
-tag; enable Enhanced measurement's browser history page views in the GA4 web
-stream to measure tool tab changes and Back/Forward navigation.
-
-The Pedalboard Planner link sends `pedal_planner_view` when at least half of the
-link enters the viewport, once per page path per document load. This avoids
-duplicate impressions from responsive layouts, component remounts and React
-Strict Mode. Normal clicks and middle clicks send `pedal_planner_click` without
-delaying navigation. Both events include `link_url` and `page_path`.
-
-In GA4 Explore, use a closed funnel with `pedal_planner_view` followed by
-`pedal_planner_click` to measure the share of exposed users who click. Use the
-same date range and page filter for both steps. Raw click count divided by view
-count is not a user click rate, because repeated clicks are counted. If Enhanced
-measurement also collects the outbound `click` event, do not add it to
-`pedal_planner_click`. Check the custom events in Realtime after deployment;
-historical clicks cannot be recovered. Ad blockers can prevent collection.
-
 ## SEO and static pages
 
 `pnpm build` produces real HTML pages at `/web-metronome/` and
